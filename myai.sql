@@ -11,7 +11,7 @@
  Target Server Version : 50719
  File Encoding         : 65001
 
- Date: 04/07/2023 11:12:45
+ Date: 04/07/2023 23:54:49
 */
 
 SET NAMES utf8mb4;
@@ -28,18 +28,19 @@ CREATE TABLE `group`  (
   `group_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '组名',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `group_id`(`group_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '组表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '组表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of group
 -- ----------------------------
+INSERT INTO `group` VALUES (1, 1, 1, '浙江嘉兴组');
 
 -- ----------------------------
 -- Table structure for resource
 -- ----------------------------
 DROP TABLE IF EXISTS `resource`;
 CREATE TABLE `resource`  (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
   `resource_id` int(11) UNSIGNED NOT NULL COMMENT '资源id',
   `resource_type` int(11) NOT NULL DEFAULT 1 COMMENT '类型 1文章，2图片，3视频',
   `resource_label` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '标签',
@@ -56,11 +57,12 @@ CREATE TABLE `resource`  (
   `is_deleted` int(11) NULL DEFAULT NULL COMMENT '是否被删除',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `resource_id`(`resource_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 29 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '资源总表' ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB AUTO_INCREMENT = 30 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '资源总表' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of resource
 -- ----------------------------
+INSERT INTO `resource` VALUES (1, 1, 1, '视觉识别', '什么是视觉识别', '这就是视觉识别', '这个就是视觉识别', NULL, 0, 0, 0, 0, NULL, '2023-07-04 22:45:50', NULL);
 
 -- ----------------------------
 -- Table structure for resource_comment
@@ -99,13 +101,14 @@ CREATE TABLE `score`  (
   INDEX `phone6`(`user_phone`) USING BTREE,
   INDEX `group6`(`group_id`) USING BTREE,
   INDEX `score`(`score`) USING BTREE,
-  CONSTRAINT `phone6` FOREIGN KEY (`user_phone`) REFERENCES `user` (`user_phone`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  CONSTRAINT `group6` FOREIGN KEY (`group_id`) REFERENCES `group` (`group_id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '积分总表' ROW_FORMAT = Dynamic;
+  CONSTRAINT `group6` FOREIGN KEY (`group_id`) REFERENCES `group` (`group_id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `phone6` FOREIGN KEY (`user_phone`) REFERENCES `user` (`user_phone`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '积分总表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of score
 -- ----------------------------
+INSERT INTO `score` VALUES (1, '15990771449', 1, 10);
 
 -- ----------------------------
 -- Table structure for score_log
@@ -207,7 +210,7 @@ CREATE TABLE `user`  (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
   `user_phone` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '手机账号',
   `user_password` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '密码',
-  `user_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '小智' COMMENT '名称',
+  `user_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '名称',
   `head_photo` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '头像',
   `location` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '归属地',
   `real_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '真实姓名',
@@ -225,11 +228,13 @@ CREATE TABLE `user`  (
   INDEX `user_password`(`user_password`) USING BTREE COMMENT '密码索引',
   INDEX `user_phone`(`user_phone`) USING BTREE,
   INDEX `user_name`(`user_name`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1742614531 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户表' ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户表' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of user
 -- ----------------------------
+INSERT INTO `user` VALUES (1, '15990771449', '123456', '阿尔卑斯', NULL, '瑞士', '阿尔卑斯', '25', '男', '深度学习', NULL, 1, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `user` VALUES (2, '123456', '123456', '美猴王', NULL, '浙江嘉兴', '孙悟空', '27', '男', '西游记', NULL, 2, NULL, NULL, NULL, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for user_collection
@@ -245,11 +250,12 @@ CREATE TABLE `user_collection`  (
   INDEX `resource1`(`resource_id`) USING BTREE,
   CONSTRAINT `phone1` FOREIGN KEY (`user_phone`) REFERENCES `user` (`user_phone`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `resource1` FOREIGN KEY (`resource_id`) REFERENCES `resource` (`resource_id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户收藏表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户收藏表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of user_collection
 -- ----------------------------
+INSERT INTO `user_collection` VALUES (1, '15990771449', 1, '2023-07-04 22:47:27');
 
 -- ----------------------------
 -- Table structure for user_follow
@@ -304,7 +310,7 @@ CREATE TABLE `user_note`  (
   `note_content` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '笔记内容',
   `create_time` datetime NULL DEFAULT NULL,
   `update_time` datetime NULL DEFAULT NULL,
-  `is_deleted` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `is_deleted` int(11) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `phone3`(`user_phone`) USING BTREE,
   INDEX `resource3`(`resource_id`) USING BTREE,
