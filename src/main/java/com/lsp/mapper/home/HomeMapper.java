@@ -6,6 +6,6 @@ import org.apache.ibatis.annotations.Mapper;
  * @Author: LinShanPeng
  */
 @Mapper
-public interface homeMapper {
+public interface HomeMapper {
 
 }
