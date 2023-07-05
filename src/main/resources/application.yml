@@ -14,7 +14,7 @@ mybatis:
     map-underscore-to-camel-case: true
 
 server:
-  port: 8800
+  port: 8899
 
 ############## Sa-Token 配置 (文档: https://sa-token.cc) ##############
 sa-token:

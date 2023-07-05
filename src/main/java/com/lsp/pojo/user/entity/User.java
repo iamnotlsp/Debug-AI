@@ -42,7 +42,7 @@ public class User implements Serializable {
     private String realName;
 
     @ApiModelProperty("年龄")
-    private String userAge;
+    private Integer userAge;
 
     @ApiModelProperty("性别")
     private String userSex;
@@ -51,10 +51,10 @@ public class User implements Serializable {
     private String userLikes;
 
     @ApiModelProperty("介绍")
-    private Integer userInfo;
+    private String userInfo;
 
     @ApiModelProperty("群体id")
-    private Integer guildId;
+    private Integer groupId;
 
     @ApiModelProperty("成就称号")
     private String achievement;
@@ -62,9 +62,14 @@ public class User implements Serializable {
     @ApiModelProperty("工作")
     private String work;
 
-    private LocalDateTime createTime;
+    private java.sql.Timestamp createTime;
 
-    private LocalDateTime updateTime;
+    private java.sql.Timestamp updateTime;
 
     private Integer isDeleted;
+
+    public User(String userPhone, String userPassword) {
+        this.userPhone = userPhone;
+        this.userPassword = userPassword;
+    }
 }
