@@ -9,7 +9,7 @@ import java.io.Serializable;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Group implements Serializable {
+public class UserGroup implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

@@ -3,8 +3,11 @@ package com.lsp.service.user.impl;
 import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.lsp.mapper.user.UserMapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.lsp.mapper.ScoreMapper;
+import com.lsp.mapper.UserMapper;
 import com.lsp.pojo.Result;
+import com.lsp.pojo.score.entity.Score;
 import com.lsp.pojo.user.entity.User;
 import com.lsp.pojo.user.resquest.RegisterRequest;
 import com.lsp.service.user.UserService;
@@ -20,6 +23,9 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private ScoreMapper scoreMapper;
 
 
     @Override
@@ -52,6 +58,7 @@ public class UserServiceImpl implements UserService {
             return false;
         }else {
             userMapper.insert(new User(mobile, password));
+            scoreMapper.insert(new Score(mobile));
             return true;
         }
     }

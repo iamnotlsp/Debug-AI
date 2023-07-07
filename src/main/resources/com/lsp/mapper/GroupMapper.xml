@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lsp.mapper.GroupMapper">
+
+    <select id="selectByGroupId" resultType="com.lsp.pojo.user.entity.UserGroup">
+        select * from user_group where group_id = #{groupId}
+    </select>
+</mapper>

@@ -13,6 +13,17 @@ mybatis:
     #驼峰映射
     map-underscore-to-camel-case: true
 
+
+#mybatis-plus 日志
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    banner: false
+    db-config:
+      id-type: assign_id
+
+
 server:
   port: 8899
 

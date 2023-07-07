@@ -1,7 +1,7 @@
 package com.lsp.service.resource.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.lsp.mapper.resource.ResourceMapper;
+import com.lsp.mapper.ResourceMapper;
 import com.lsp.pojo.resource.entity.Resource;
 import com.lsp.service.resource.ResourceService;
 import lombok.extern.slf4j.Slf4j;

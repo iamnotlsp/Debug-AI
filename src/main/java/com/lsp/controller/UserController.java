@@ -1,6 +1,7 @@
 package com.lsp.controller;
 
 import cn.dev33.satoken.stp.SaTokenInfo;
+import cn.dev33.satoken.stp.StpUtil;
 import com.lsp.pojo.Result;
 import com.lsp.pojo.user.entity.User;
 import com.lsp.pojo.user.resquest.RegisterRequest;
@@ -23,6 +24,11 @@ public class UserController {
         return userService.doLogin(userPhone, password);
     }
 
+    @GetMapping("/isLogin")
+    public Result isLogin() {
+        return Result.success("是否登录" , StpUtil.isLogin());
+    }
+
     @PostMapping("/register")
     public Result<String> register(@RequestBody RegisterRequest request){
         if (userService.register(request)){
@@ -41,4 +47,9 @@ public class UserController {
         }
     }
 
+    @GetMapping ("/logout")
+    public Result<String> logout() {
+        StpUtil.logout();
+        return Result.success("退出成功");
+    }
 }

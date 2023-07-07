@@ -1,10 +1,10 @@
 package com.lsp.controller;
 
 import com.lsp.pojo.Result;
+import com.lsp.pojo.member.response.CollectionResponse;
 import com.lsp.pojo.user.entity.User;
 import com.lsp.pojo.user.resquest.UserInfoRequest;
 import com.lsp.service.member.MemberService;
-import com.lsp.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,5 +29,10 @@ public class MemberController {
     @GetMapping("/getInfo")
     public Result<User> getInfo(){
         return memberService.getInfo();
+    }
+
+    @GetMapping("/getCollections")
+    public Result<CollectionResponse> getCollections(){
+        return Result.success("收藏:",memberService.getCollections());
     }
 }

@@ -18,4 +18,7 @@ public class Score implements Serializable {
   private Integer groupId;
   private Integer score;
 
+  public Score(String userPhone) {
+    this.userPhone = userPhone;
+  }
 }
