@@ -1,6 +1,6 @@
 package com.lsp.pojo.member.response;
 
-import com.lsp.pojo.resource.entity.Resource;
+import com.lsp.pojo.score.response.GroupRank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,8 +13,9 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CollectionResponse {
-    private String userPhone;
-    private Integer collectionNums;
-    private List<Resource> list;
+public class MemberGroup {
+    private Integer groupId;
+    private String groupName;
+    private Integer peopleNums;
+    private List<GroupRank> groupRankList;
 }

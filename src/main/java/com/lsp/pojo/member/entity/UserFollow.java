@@ -1,5 +1,4 @@
-package com.lsp.pojo.user.entity;
-
+package com.lsp.pojo.member.entity;
 
 
 import lombok.AllArgsConstructor;
@@ -9,20 +8,23 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-/**
- * @Author: LinShanPeng
- *  用户收藏表
- */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserCollection implements Serializable {
+public class UserFollow implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+
     private Integer id;
     private String userPhone;
-    private Integer resourceId;
-    private LocalDateTime createTime;
+    private String followName;
+    private String followDescribe;
+    private String headPhoto;
+    private String createTime;
+    private String updateTime;
+    private Integer isDeleted;
+
+
 
 }

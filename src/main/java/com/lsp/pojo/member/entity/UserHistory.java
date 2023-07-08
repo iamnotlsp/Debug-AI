@@ -1,4 +1,4 @@
-package com.lsp.pojo.user.entity;
+package com.lsp.pojo.member.entity;
 
 
 import lombok.AllArgsConstructor;
@@ -18,7 +18,7 @@ public class UserHistory implements Serializable {
   private Integer id;
   private String userPhone;
   private Integer resourceId;
-  private LocalDateTime createTime;
+  private String createTime;
 
 
 

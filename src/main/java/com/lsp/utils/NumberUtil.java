@@ -104,7 +104,8 @@ public class NumberUtil {
         long millis = duration.toMillis();//相差毫秒数
         long nanos = duration.toNanos();//相差的纳秒数
 
-        return hours + ":" + minutes + ":" + millis / 1000;
+//        return hours + ":" + minutes + ":" + millis / 1000;
+        return "" + days;
     }
 
 
@@ -156,10 +157,9 @@ public class NumberUtil {
             return true;
         }
         //Only one of them is null
-        else if(list1 == null || list2 == null) {
+        else if (list1 == null || list2 == null) {
             return false;
-        }
-        else if(list1.size() != list2.size()) {
+        } else if (list1.size() != list2.size()) {
             return false;
         }
         //copying to avoid rearranging original lists

@@ -61,9 +61,9 @@ public class ScoreServiceImpl implements ScoreService {
 
         QueryWrapper<ScoreDetail> wrapper = new QueryWrapper<ScoreDetail>().eq("user_phone", user.getUserPhone());
         wrapper.ge("create_time", NumberUtil.getTodayLocalDateTime());
-        if (scoreDetailMapper.selectOne(wrapper) == null) {
-            scoreDetailMapper.insert(new ScoreDetail(user.getUserPhone()));
-        }
+//        if (scoreDetailMapper.selectOne(wrapper) == null) {
+//            scoreDetailMapper.insert(new ScoreDetail(user.getUserPhone()));
+//        }
         ScoreDetail scoreDetail = scoreDetailMapper.selectOne(wrapper);
         switch (type) {
             case 1:
@@ -134,13 +134,13 @@ public class ScoreServiceImpl implements ScoreService {
         User user = userMapper.selectById(id);
         String userPhone = user.getUserPhone();
         QueryWrapper<ScoreDetail> wrapper = new QueryWrapper<>();
-        wrapper.eq("user_phone", userPhone);
+        wrapper.eq("user_phone", userPhone).orderByDesc("create_time");
         List<ScoreDetail> scoreDetails = scoreDetailMapper.selectList(wrapper);
         ArrayList<ScoreLog> logs = new ArrayList<>();
         for (ScoreDetail sd : scoreDetails) {
             Integer todayGet = sd.getLoginScore() + sd.getArticleScore() + sd.getViewScore() + sd.getAiScore() + sd.getPkScore() + sd.getAnswerScore() - sd.getExpenseScore();
             logs.add(new ScoreLog(todayGet, sd.getLoginScore(), sd.getArticleScore(), sd.getViewScore(), sd.getAnswerScore(), sd.getPkScore(), sd.getAiScore(), sd.getExpenseScore(),
-                    sd.getCreateTime().toLocalDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))));
+                    sd.getCreateTime()));
         }
         return new ScoreDetailResponse(userPhone, scoreMapper.selectById(id).getScore(), logs);
     }

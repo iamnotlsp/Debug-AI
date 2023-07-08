@@ -26,8 +26,8 @@ public class Resource implements Serializable {
   private Integer resourceSearch;
   private Integer resourceLikes;
   private Integer resourceComments;
-  private java.sql.Timestamp createTime;
-  private java.sql.Timestamp updateTime;
+  private String createTime;
+  private String updateTime;
   private long isDeleted;
 
 

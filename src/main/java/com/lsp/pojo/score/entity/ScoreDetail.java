@@ -22,7 +22,7 @@ public class ScoreDetail {
     private Integer pkScore;
     private Integer aiScore;
     private Integer expenseScore;
-    private java.sql.Timestamp createTime;
+    private String createTime;
 
     public ScoreDetail(String userPhone) {
         this.userPhone = userPhone;

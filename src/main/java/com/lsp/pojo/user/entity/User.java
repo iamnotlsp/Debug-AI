@@ -62,9 +62,9 @@ public class User implements Serializable {
     @ApiModelProperty("工作")
     private String work;
 
-    private java.sql.Timestamp createTime;
+    private LocalDateTime createTime;
 
-    private java.sql.Timestamp updateTime;
+    private LocalDateTime updateTime;
 
     private Integer isDeleted;
 

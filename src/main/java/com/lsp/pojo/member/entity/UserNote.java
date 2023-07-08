@@ -1,4 +1,4 @@
-package com.lsp.pojo.user.entity;
+package com.lsp.pojo.member.entity;
 
 
 import lombok.AllArgsConstructor;
@@ -19,8 +19,8 @@ public class UserNote implements Serializable {
   private String userPhone;
   private Integer resourceId;
   private String noteContent;
-  private LocalDateTime createTime;
-  private LocalDateTime updateTime;
+  private String createTime;
+  private String updateTime;
   private Integer isDeleted;
 
 
