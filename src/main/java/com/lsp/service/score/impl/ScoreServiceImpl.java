@@ -8,10 +8,7 @@ import com.lsp.mapper.ScoreMapper;
 import com.lsp.mapper.UserMapper;
 import com.lsp.pojo.score.entity.Score;
 import com.lsp.pojo.score.entity.ScoreDetail;
-import com.lsp.pojo.score.response.GroupRank;
-import com.lsp.pojo.score.response.ScoreDetailResponse;
-import com.lsp.pojo.score.response.ScoreLog;
-import com.lsp.pojo.score.response.ScoreRankResponse;
+import com.lsp.pojo.score.response.*;
 import com.lsp.pojo.user.entity.User;
 import com.lsp.pojo.user.entity.UserGroup;
 import com.lsp.service.group.GroupService;
@@ -24,6 +21,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -52,34 +51,33 @@ public class ScoreServiceImpl implements ScoreService {
     }
 
     @Override
-    public Integer addScore(Integer add, Integer type) {
+    public Integer addScore(Integer type) {
         Integer id = Integer.valueOf(String.valueOf(StpUtil.getLoginId()));
         User user = userMapper.selectById(id);
         Score score = scoreMapper.selectById(id);
-        score.setScore(score.getScore() + add);
+        score.setScore(score.getScore() + 1);
         scoreMapper.updateById(score);
 
+        //找到今天的score日志
         QueryWrapper<ScoreDetail> wrapper = new QueryWrapper<ScoreDetail>().eq("user_phone", user.getUserPhone());
         wrapper.ge("create_time", NumberUtil.getTodayLocalDateTime());
-//        if (scoreDetailMapper.selectOne(wrapper) == null) {
-//            scoreDetailMapper.insert(new ScoreDetail(user.getUserPhone()));
-//        }
         ScoreDetail scoreDetail = scoreDetailMapper.selectOne(wrapper);
+
         switch (type) {
             case 1:
-                scoreDetail.setArticleScore(scoreDetail.getArticleScore() + add);
+                scoreDetail.setArticleScore(scoreDetail.getArticleScore() + 1);
                 break;
             case 2:
-                scoreDetail.setViewScore(scoreDetail.getViewScore() + add);
+                scoreDetail.setViewScore(scoreDetail.getViewScore() + 1);
                 break;
             case 3:
-                scoreDetail.setPkScore(scoreDetail.getPkScore() + add);
+                scoreDetail.setPkScore(scoreDetail.getPkScore() + 1);
                 break;
             case 4:
-                scoreDetail.setAnswerScore(scoreDetail.getAnswerScore() + add);
+                scoreDetail.setAnswerScore(scoreDetail.getAnswerScore() + 1);
                 break;
             case 5:
-                scoreDetail.setAiScore(scoreDetail.getAiScore() + add);
+                scoreDetail.setAiScore(scoreDetail.getAiScore() + 1);
                 break;
             default:
                 break;
@@ -130,18 +128,55 @@ public class ScoreServiceImpl implements ScoreService {
 
     @Override
     public ScoreDetailResponse getDetail() {
+        //当前用户手机号
         Integer id = MyUtil.getLoginId();
         User user = userMapper.selectById(id);
         String userPhone = user.getUserPhone();
+        //倒序日志
         QueryWrapper<ScoreDetail> wrapper = new QueryWrapper<>();
         wrapper.eq("user_phone", userPhone).orderByDesc("create_time");
         List<ScoreDetail> scoreDetails = scoreDetailMapper.selectList(wrapper);
+
         ArrayList<ScoreLog> logs = new ArrayList<>();
         for (ScoreDetail sd : scoreDetails) {
-            Integer todayGet = sd.getLoginScore() + sd.getArticleScore() + sd.getViewScore() + sd.getAiScore() + sd.getPkScore() + sd.getAnswerScore() - sd.getExpenseScore();
-            logs.add(new ScoreLog(todayGet, sd.getLoginScore(), sd.getArticleScore(), sd.getViewScore(), sd.getAnswerScore(), sd.getPkScore(), sd.getAiScore(), sd.getExpenseScore(),
-                    sd.getCreateTime()));
+//            不知道为什么找不到statement,只能作罢
+//            Integer todayGet = scoreDetailMapper.selectToday(sd);
+            Integer todayGet = MyUtil.getTodaySum(sd);
+            ArrayList<ScoreTask> list = new ArrayList<>();
+            list.add(new ScoreTask("登录积分",sd.getLoginScore()));
+            list.add(new ScoreTask("文章积分",sd.getArticleScore()));
+            list.add(new ScoreTask("视频积分",sd.getViewScore()));
+            list.add(new ScoreTask("PK积分",sd.getPkScore()));
+            list.add(new ScoreTask("AI积分",sd.getAiScore()));
+            list.add(new ScoreTask("消费积分",sd.getExpenseScore()));
+
+            logs.add(new ScoreLog(todayGet,list,sd.getCreateTime()));
         }
         return new ScoreDetailResponse(userPhone, scoreMapper.selectById(id).getScore(), logs);
+    }
+
+    @Override
+    public ScoreTaskResponse getScoreTask() {
+        Integer loginId = MyUtil.getLoginId();
+        User user = userMapper.selectById(loginId);
+        String userPhone = user.getUserPhone();
+
+        Integer sumScore = getSumScore();
+
+        QueryWrapper<ScoreDetail> wrapper = new QueryWrapper<ScoreDetail>().eq("user_phone", user.getUserPhone());
+        wrapper.ge("create_time", NumberUtil.getTodayLocalDateTime());
+        ScoreDetail sd = scoreDetailMapper.selectOne(wrapper);
+        Integer todaySum = MyUtil.getTodaySum(sd);
+
+
+        ArrayList<ScoreTaskDetail> list = new ArrayList<>();
+        list.add(new ScoreTaskDetail("看文章","每有效阅读一篇文章+1分",sd.getArticleScore(),6));
+        list.add(new ScoreTaskDetail("看视频","每有效观看一个视频+1分",sd.getViewScore(),6));
+        list.add(new ScoreTaskDetail("回答问题","每成功回答一个问题+1分",sd.getAnswerScore(),6));
+        list.add(new ScoreTaskDetail("完成pk","胜利+6分,失败+3分",sd.getPkScore(),6));
+        list.add(new ScoreTaskDetail("完成ai模块的学习","每学习一个模块+2分",sd.getAiScore(),6));
+
+        return new ScoreTaskResponse(sumScore,todaySum,NumberUtil.getTimeDifference
+                (user.getCreateTime(), NumberUtil.getTodayLocalDateTime()),list);
     }
 }

@@ -1,5 +1,6 @@
-package com.lsp.pojo.score.response;
+package com.lsp.pojo.member.request;
 
+import com.lsp.pojo.member.response.PlanPost;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,8 +13,6 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ScoreLog {
-    private Integer todayGetSum;
-    private List<ScoreTask> task;
-    private String createTime;
+public class PlanRequest {
+    private List<PlanPost> planPosts;
 }

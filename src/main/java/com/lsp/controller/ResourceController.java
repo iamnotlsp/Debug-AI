@@ -18,9 +18,11 @@ public class ResourceController {
     @Autowired
     private ResourceService resourceService;
 
-    @GetMapping("/getResource")
+    @GetMapping("/getDetail")
     public Result<Resource> getSource(Integer resourceId){
         Resource resource = resourceService.getResourceById(resourceId);
         return Result.success("资源具体内容:",resource);
     }
+
+
 }

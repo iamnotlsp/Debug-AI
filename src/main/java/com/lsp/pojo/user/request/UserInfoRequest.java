@@ -1,6 +1,5 @@
-package com.lsp.pojo.user.resquest;
+package com.lsp.pojo.user.request;
 
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.lsp.pojo.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;

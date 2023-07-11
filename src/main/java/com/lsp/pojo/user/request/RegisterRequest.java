@@ -1,4 +1,4 @@
-package com.lsp.pojo.user.resquest;
+package com.lsp.pojo.user.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

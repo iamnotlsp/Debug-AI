@@ -18,9 +18,10 @@ public class StudyPlanEvent implements Serializable {
   private String userPhone;
   private Integer planId;
   private String eventName;
-  private LocalDateTime eventTime;
-  private LocalDateTime createTime;
-  private LocalDateTime updateTime;
+  private String eventTime;
+  private Integer eventState;
+  private String createTime;
+  private String updateTime;
   private Integer isDeleted;
 
 

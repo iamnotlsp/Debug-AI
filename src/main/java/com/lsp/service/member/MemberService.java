@@ -1,9 +1,11 @@
 package com.lsp.service.member;
 
-import com.lsp.pojo.Result;
+import com.lsp.pojo.member.request.PlanRequest;
 import com.lsp.pojo.member.response.*;
-import com.lsp.pojo.user.entity.User;
-import com.lsp.pojo.user.resquest.UserInfoRequest;
+import com.lsp.pojo.study.response.PlanResponse;
+import com.lsp.pojo.user.request.UserInfoRequest;
+
+import java.util.List;
 
 /**
  * @Author: LinShanPeng
@@ -12,7 +14,7 @@ public interface MemberService {
 
     boolean finishInfo(UserInfoRequest request);
 
-    Result<User> getInfo();
+    MemberInfoResponse getInfo();
 
     CollectionResponse getCollections();
 
@@ -23,4 +25,19 @@ public interface MemberService {
     HistoryResponse getHistory(Integer start, Integer pageSize);
 
     MemberMainResponse getMain();
+
+    boolean addCollection(Integer resourceId);
+
+
+    boolean addNote(Integer resourceId, String content);
+
+    boolean updateNote(Integer id, String content);
+
+    boolean addEvent(PlanRequest planRequest, Integer planId);
+
+    Integer addPlan(String planName, String startTime, String endTime);
+
+    List<PlanResponse> getPlan();
+
+    List<MemberStudyEvent> getEventByPlan(Integer planId);
 }

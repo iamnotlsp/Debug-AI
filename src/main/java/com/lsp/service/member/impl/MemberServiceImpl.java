@@ -5,23 +5,23 @@ import cn.dev33.satoken.stp.StpUtil;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.lsp.mapper.*;
 import com.lsp.pojo.MyPage;
-import com.lsp.pojo.Result;
 import com.lsp.pojo.member.entity.UserFollow;
 import com.lsp.pojo.member.entity.UserHistory;
 import com.lsp.pojo.member.entity.UserNote;
+import com.lsp.pojo.member.request.PlanRequest;
 import com.lsp.pojo.member.response.*;
 import com.lsp.pojo.resource.entity.Resource;
 import com.lsp.pojo.score.entity.ScoreDetail;
-import com.lsp.pojo.score.response.ScoreLog;
 import com.lsp.pojo.score.response.ScoreRankResponse;
+import com.lsp.pojo.study.entity.StudyPlan;
+import com.lsp.pojo.study.entity.StudyPlanEvent;
+import com.lsp.pojo.study.response.PlanResponse;
 import com.lsp.pojo.user.entity.User;
 import com.lsp.pojo.member.entity.UserCollection;
-import com.lsp.pojo.user.resquest.UserInfoRequest;
-import com.lsp.service.group.GroupService;
+import com.lsp.pojo.user.request.UserInfoRequest;
 import com.lsp.service.member.MemberService;
 import com.lsp.service.score.ScoreService;
 import com.lsp.utils.MyUtil;
@@ -30,13 +30,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @Author: LinShanPeng
@@ -69,6 +66,11 @@ public class MemberServiceImpl implements MemberService {
     @Autowired
     private ScoreService scoreService;
 
+    @Autowired
+    private StudyPlanMapper studyPlanMapper;
+
+    @Autowired
+    private StudyEventMapper studyEventMapper;
 
     @Override
     public boolean finishInfo(UserInfoRequest info) {
@@ -85,9 +87,9 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public Result<User> getInfo() {
+    public MemberInfoResponse getInfo() {
         User user = userMapper.selectById(Integer.parseInt(String.valueOf(StpUtil.getLoginId())));
-        return Result.success("用户信息:", user);
+        return new MemberInfoResponse(user);
     }
 
     @Override
@@ -105,6 +107,23 @@ public class MemberServiceImpl implements MemberService {
         }
         Integer count = Math.toIntExact(collectionsMapper.selectCount(wrapper));
         return new CollectionResponse(user.getUserPhone(), count, list);
+    }
+
+    @Override
+    public boolean addCollection(Integer resourceId) {
+        Integer id = MyUtil.getLoginId();
+        User user = userMapper.selectById(id);
+        QueryWrapper<UserCollection> wrapper = new QueryWrapper<UserCollection>()
+                .eq("resource_id", resourceId).eq("user_phone", user.getUserPhone());
+        if (collectionsMapper.selectOne(wrapper) != null) {
+            return false;
+        } else {
+            UserCollection collection = new UserCollection();
+            collection.setUserPhone(user.getUserPhone());
+            collection.setResourceId(resourceId);
+            collectionsMapper.insert(collection);
+            return true;
+        }
     }
 
     @Override
@@ -132,12 +151,105 @@ public class MemberServiceImpl implements MemberService {
         Page<UserNote> notePage = notesMapper.selectPage(page, wrapper);
         ArrayList<Notes> list = new ArrayList<>();
         for (UserNote record : notePage.getRecords()) {
-            list.add(new Notes(record.getResourceId(), record.getNoteContent(), record.getCreateTime(), record.getUpdateTime()));
+            list.add(new Notes(record.getId(), record.getResourceId(),
+                    resourceMapper.selectById(record.getResourceId()).getResourceTitle(),
+                    record.getNoteContent(), record.getCreateTime(), record.getUpdateTime()));
         }
         return new NoteResponse(user.getUserPhone(), Math.toIntExact(notePage.getTotal()),
                 new MyPage(notePage.getCurrent(), notePage.getPages(), notePage.getSize(), notePage.getTotal()),
                 list);
     }
+
+
+    @Override
+    public boolean addNote(Integer resourceId, String content) {
+        Integer id = MyUtil.getLoginId();
+        User user = userMapper.selectById(id);
+        UserNote note = new UserNote();
+        note.setUserPhone(user.getUserPhone());
+        note.setResourceId(resourceId);
+        note.setNoteContent(content);
+        notesMapper.insert(note);
+        return true;
+    }
+
+    @Override
+    public boolean updateNote(Integer id, String content) {
+        UserNote note = notesMapper.selectById(id);
+        if (note == null) {
+            return false;
+        }
+        note.setNoteContent(content);
+        notesMapper.updateById(note);
+        return true;
+    }
+
+    @Override
+    public boolean addEvent(PlanRequest planRequest, Integer planId) {
+        Integer loginId = MyUtil.getLoginId();
+        User user = userMapper.selectById(loginId);
+        for (PlanPost request : planRequest.getPlanPosts()) {
+            StudyPlanEvent studyPlanEvent = new StudyPlanEvent();
+            studyPlanEvent.setUserPhone(user.getUserPhone());
+            studyPlanEvent.setPlanId(planId);
+            studyPlanEvent.setEventName(request.getEventName());
+            studyPlanEvent.setEventTime(request.getEventTime());
+            studyPlanEvent.setEventState(0);
+            studyEventMapper.insert(studyPlanEvent);
+        }
+        return true;
+    }
+
+    @Override
+    public Integer addPlan(String planName, String startTime, String endTime) {
+        Integer loginId = MyUtil.getLoginId();
+        User user = userMapper.selectById(loginId);
+
+        if (studyPlanMapper.exists(new QueryWrapper<StudyPlan>()
+                .eq("plan_name", planName).eq("start_time", startTime))) {
+            return 0;
+        }
+
+        StudyPlan studyPlan = new StudyPlan();
+        studyPlan.setPlanState(0);
+        studyPlan.setPlanName(planName);
+        studyPlan.setStartTime(startTime);
+        studyPlan.setEndTime(endTime);
+        studyPlan.setUserPhone(user.getUserPhone());
+        studyPlanMapper.insert(studyPlan);
+
+
+        StudyPlan plan = studyPlanMapper.selectOne(new QueryWrapper<StudyPlan>()
+                .eq("plan_name", planName).eq("start_time", startTime));
+        return plan.getId();
+    }
+
+    @Override
+    public List<PlanResponse> getPlan() {
+        Integer loginId = MyUtil.getLoginId();
+        User user = userMapper.selectById(loginId);
+        List<StudyPlan> studyPlans = studyPlanMapper.selectList
+                (new QueryWrapper<StudyPlan>().eq("user_phone", user.getUserPhone()));
+        ArrayList<PlanResponse> list = new ArrayList<>();
+        for (StudyPlan studyPlan : studyPlans) {
+            PlanResponse response = new PlanResponse(studyPlan.getId(), studyPlan.getPlanName(), studyPlan.getStartTime(),
+                    studyPlan.getEndTime(), studyPlan.getPlanState(), studyPlan.getCreateTime());
+            list.add(response);
+        }
+        return list;
+    }
+
+    @Override
+    public List<MemberStudyEvent> getEventByPlan(Integer planId) {
+        QueryWrapper<StudyPlanEvent> wrapper = new QueryWrapper<StudyPlanEvent>().eq("plan_id", planId);
+        ArrayList<MemberStudyEvent> list = new ArrayList<>();
+        for (StudyPlanEvent event : studyEventMapper.selectList(wrapper)) {
+            list.add(new MemberStudyEvent(event.getPlanId(), event.getEventName(),
+                    event.getEventTime(), event.getEventState()));
+        }
+        return list;
+    }
+
 
     @Override
     public HistoryResponse getHistory(Integer start, Integer pageSize) {
@@ -151,7 +263,8 @@ public class MemberServiceImpl implements MemberService {
         for (UserHistory record : historyPage.getRecords()) {
             Resource resource = resourceMapper.selectById(record.getResourceId());
             list.add(new Histories(resource.getResourceId(), resource.getResourceType(),
-                    resource.getResourceLabel(), resource.getResourceTitle(), resource.getResourceDescribe()));
+                    resource.getResourceLabel(), resource.getResourceTitle(), resource.getResourceDescribe(),
+                    record.getCreateTime()));
         }
         return new HistoryResponse(user.getUserPhone(), Math.toIntExact(historyPage.getTotal()),
                 new MyPage(historyPage.getCurrent(), historyPage.getPages(), historyPage.getSize(), historyPage.getTotal()),
@@ -178,20 +291,19 @@ public class MemberServiceImpl implements MemberService {
                 (new QueryWrapper<UserNote>().eq("user_phone", user.getUserPhone())));
         Member4Part member4Part = new Member4Part(count1, count2, count3, count4);
 
-        //得到积分简略情况，冗余很大，有修改空间
+        //得到积分简略情况(今天得分,总分,近七天得分)
+        //今天得分
         QueryWrapper<ScoreDetail> wrapper = new QueryWrapper<ScoreDetail>().eq("user_phone", user.getUserPhone());
         wrapper.ge("create_time", NumberUtil.getTodayLocalDateTime());
         ScoreDetail sd = scoreDetailMapper.selectOne(wrapper);
-        Integer todayGet = sd.getLoginScore() + sd.getArticleScore() + sd.getViewScore() + sd.getAiScore() + sd.getPkScore() + sd.getAnswerScore() - sd.getExpenseScore();
-
+        Integer todayGet = MyUtil.getTodaySum(sd);
+        //近七天得分
         wrapper.clear();
         LocalDateTime lastWeekLocalDateTime = NumberUtil.getLastWeekLocalDateTime();
-        long lastWeekTimestamp = NumberUtil.getTimestamp(lastWeekLocalDateTime);
-        wrapper.eq("user_phone", user.getUserPhone()).ge("create_time", lastWeekTimestamp);
+        wrapper.eq("user_phone", user.getUserPhone()).ge("create_time", lastWeekLocalDateTime);
         ArrayList<HashMap> list = new ArrayList<>();
         for (ScoreDetail sd1 : scoreDetailMapper.selectList(wrapper)) {
-            Integer todayGet1 = sd.getLoginScore() + sd.getArticleScore() + sd.getViewScore()
-                    + sd.getAiScore() + sd.getPkScore() + sd.getAnswerScore() - sd.getExpenseScore();
+            Integer todayGet1 = MyUtil.getTodaySum(sd1);
             String createTime = sd1.getCreateTime();
             HashMap<String, Integer> hashMap = new HashMap<>();
             hashMap.put(createTime, todayGet1);
@@ -199,8 +311,36 @@ public class MemberServiceImpl implements MemberService {
         }
         MemberScore memberScore = new MemberScore(todayGet, scoreService.getSumScore(), list);
 
-        //没想好学习计划
-        MemberStudyPlan memberStudyPlan = new MemberStudyPlan("学习计划");
+        //学习计划
+
+        List<StudyPlan> studyPlans = studyPlanMapper.selectList(
+                new QueryWrapper<StudyPlan>().eq("user_phone", user.getUserPhone()));
+
+        MemberStudyPlan memberStudyPlan = new MemberStudyPlan();
+        memberStudyPlan.setName("快去制定自己的学习计划吧！");
+        if (studyPlans.size() != 0) {
+            StudyPlan newSP = studyPlans.get(0);
+            for (StudyPlan studyPlan : studyPlans) {
+                if (studyPlan.getPlanState() == 1) {
+                    newSP = studyPlan;
+                    break;
+                }
+            }
+            List<StudyPlanEvent> planEventList = studyEventMapper.selectList(
+                    new QueryWrapper<StudyPlanEvent>().eq("plan_id", newSP.getId()));
+            ArrayList<MemberStudyEvent> events = new ArrayList<>();
+            for (StudyPlanEvent planEvent : planEventList) {
+                MemberStudyEvent event = new MemberStudyEvent(planEvent.getPlanId(), planEvent.getEventName(),
+                        planEvent.getEventTime(), planEvent.getEventState());
+                events.add(event);
+            }
+            memberStudyPlan.setPlanId(newSP.getId());
+            memberStudyPlan.setName(newSP.getPlanName());
+            memberStudyPlan.setState(newSP.getPlanState());
+            memberStudyPlan.setStartTime(newSP.getStartTime());
+            memberStudyPlan.setEndTime(newSP.getEndTime());
+            memberStudyPlan.setStudyEvent(events);
+        }
 
         //得到排行榜
         ScoreRankResponse rank = scoreService.getSumRank();
@@ -209,4 +349,6 @@ public class MemberServiceImpl implements MemberService {
 
         return new MemberMainResponse(memberBrief, member4Part, memberScore, memberStudyPlan, memberGroup);
     }
+
+
 }

@@ -11,7 +11,9 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 public class Notes {
+    private Integer id;
     private Integer resourceId;
+    private String resourceName;
     private String noteContent;
     private String createTime;
     private String updateTime;

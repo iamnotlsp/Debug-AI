@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.util.HashMap;
 
 /**
  * @Author: LinShanPeng
@@ -12,8 +12,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ScoreLog {
-    private Integer todayGetSum;
-    private List<ScoreTask> task;
-    private String createTime;
+public class ScoreTask {
+    private String name;
+    private Integer nums;
 }

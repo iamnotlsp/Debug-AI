@@ -1,10 +1,8 @@
-package com.lsp.pojo.member.response;
+package com.lsp.pojo.study.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 /**
  * @Author: LinShanPeng
@@ -12,11 +10,11 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MemberStudyPlan {
+public class PlanResponse {
     private Integer planId;
-    private String name;
+    private String planName;
     private String startTime;
     private String endTime;
-    private Integer state;
-    private List<MemberStudyEvent> studyEvent;
+    private Integer planState;
+    private String createTime;
 }

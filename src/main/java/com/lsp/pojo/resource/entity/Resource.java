@@ -1,6 +1,7 @@
 package com.lsp.pojo.resource.entity;
 
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,6 +28,7 @@ public class Resource implements Serializable {
   private Integer resourceLikes;
   private Integer resourceComments;
   private String createTime;
+  @TableField(update = "now()")
   private String updateTime;
   private long isDeleted;
 

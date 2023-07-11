@@ -1,6 +1,7 @@
 package com.lsp.pojo.member.entity;
 
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,6 +21,7 @@ public class UserNote implements Serializable {
   private Integer resourceId;
   private String noteContent;
   private String createTime;
+  @TableField(update = "now()")
   private String updateTime;
   private Integer isDeleted;
 

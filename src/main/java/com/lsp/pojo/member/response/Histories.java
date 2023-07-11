@@ -14,5 +14,6 @@ public class Histories {
     private String resourceLabel;
     private String resourceTitle;
     private String resourceDescribe;
+    private String createTime;
 
 }

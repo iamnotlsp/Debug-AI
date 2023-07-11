@@ -1,5 +1,6 @@
 package com.lsp.pojo.user.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -8,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * @Author: LinShanPeng
@@ -64,6 +66,7 @@ public class User implements Serializable {
 
     private LocalDateTime createTime;
 
+    @TableField(update = "now()")
     private LocalDateTime updateTime;
 
     private Integer isDeleted;
@@ -71,5 +74,28 @@ public class User implements Serializable {
     public User(String userPhone, String userPassword) {
         this.userPhone = userPhone;
         this.userPassword = userPassword;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", userPhone='" + userPhone + '\'' +
+                ", userPassword='" + userPassword + '\'' +
+                ", userName='" + userName + '\'' +
+                ", headPhoto='" + headPhoto + '\'' +
+                ", location='" + location + '\'' +
+                ", realName='" + realName + '\'' +
+                ", userAge=" + userAge +
+                ", userSex='" + userSex + '\'' +
+                ", userLikes='" + userLikes + '\'' +
+                ", userInfo='" + userInfo + '\'' +
+                ", groupId=" + groupId +
+                ", achievement='" + achievement + '\'' +
+                ", work='" + work + '\'' +
+                ", createTime=" + createTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) +
+                ", updateTime=" + updateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) +
+                ", isDeleted=" + isDeleted +
+                '}';
     }
 }
