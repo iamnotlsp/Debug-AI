@@ -77,11 +77,20 @@ public class MemberController {
     }
 
     @PostMapping("/note/update")
-    public Result<String> updateNote(Integer id, String content) {
-        if (memberService.updateNote(id, content)) {
+    public Result<String> updateNote(Integer noteId, String content) {
+        if (memberService.updateNote(noteId, content)) {
             return Result.success("更改成功");
         } else {
             return Result.error("更改失败");
+        }
+    }
+
+    @PostMapping("/note/delete")
+    public Result<String> deleteNote(Integer noteId){
+        if (memberService.deleteNoteById(noteId)){
+            return Result.success("删除成功");
+        }else {
+            return Result.error("删除失败");
         }
     }
 
@@ -111,6 +120,15 @@ public class MemberController {
 
     @GetMapping("/plan/event/get")
     public Result<List<MemberStudyEvent>> getEvent(Integer planId) {
-        return Result.success("学习计划:", memberService.getEventByPlan(planId));
+        return Result.success("学习事件:", memberService.getEventByPlan(planId));
+    }
+
+    @PostMapping("/plan/delete")
+    public Result<String> deletePlan(Integer planId) {
+        if (memberService.deletePlanById(planId)) {
+            return Result.success("删除成功");
+        }else {
+            return Result.error("删除失败");
+        }
     }
 }

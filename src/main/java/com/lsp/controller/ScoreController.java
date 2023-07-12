@@ -7,10 +7,7 @@ import com.lsp.pojo.score.response.ScoreTaskDetail;
 import com.lsp.pojo.score.response.ScoreTaskResponse;
 import com.lsp.service.score.ScoreService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @Author: LinShanPeng
@@ -69,7 +66,8 @@ public class ScoreController {
     }
 
     @GetMapping("/getDetail")
-    public Result<ScoreDetailResponse> getDetailScore() {
-        return Result.success("积分明细:", scoreService.getDetail());
+    public Result<ScoreDetailResponse> getDetailScore(@RequestParam(defaultValue = "1") Integer start,
+                                                      @RequestParam(defaultValue = "10") Integer pageSize) {
+        return Result.success("积分明细:", scoreService.getDetail(start, pageSize));
     }
 }

@@ -40,4 +40,8 @@ public interface MemberService {
     List<PlanResponse> getPlan();
 
     List<MemberStudyEvent> getEventByPlan(Integer planId);
+
+    boolean deletePlanById(Integer planId);
+
+    boolean deleteNoteById(Integer noteId);
 }

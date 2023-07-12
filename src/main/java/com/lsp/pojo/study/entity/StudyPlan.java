@@ -1,6 +1,7 @@
 package com.lsp.pojo.study.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,6 +23,7 @@ public class StudyPlan implements Serializable {
     private String createTime;
     @TableField(update = "now()")
     private String updateTime;
+    @TableLogic(value = "0",delval = "1")
     private Integer isDeleted;
 
 }

@@ -2,7 +2,7 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/myai
+    url: jdbc:mysql://localhost:3306/myai?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8
     username: root
     password: lsp
 
@@ -14,13 +14,19 @@ mybatis:
     map-underscore-to-camel-case: true
 
 
+
 #mybatis-plus 日志
 mybatis-plus:
 #  configuration:
 ##    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  # 主键自增
   global-config:
     db-config:
       id-type: auto
+  # is_deleted设置
+#      logic-delete-field: is_deleted
+#      logic-delete-value: 1
+#      logic-not-delete-value: 0
 
 
 

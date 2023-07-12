@@ -185,6 +185,16 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    public boolean deleteNoteById(Integer noteId) {
+        if (notesMapper.selectById(noteId) != null) {
+            notesMapper.deleteById(noteId);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
     public boolean addEvent(PlanRequest planRequest, Integer planId) {
         Integer loginId = MyUtil.getLoginId();
         User user = userMapper.selectById(loginId);
@@ -248,6 +258,17 @@ public class MemberServiceImpl implements MemberService {
                     event.getEventTime(), event.getEventState()));
         }
         return list;
+    }
+
+    @Override
+    public boolean deletePlanById(Integer planId) {
+        if (studyPlanMapper.selectById(planId) != null) {
+            studyPlanMapper.deleteById(planId);
+            studyEventMapper.delete(new QueryWrapper<StudyPlanEvent>().eq("plan_id", planId));
+            return true;
+        } else {
+            return false;
+        }
     }
 
 

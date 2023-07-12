@@ -2,10 +2,12 @@ package com.lsp.service.score.impl;
 
 import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.lsp.mapper.GroupMapper;
 import com.lsp.mapper.ScoreDetailMapper;
 import com.lsp.mapper.ScoreMapper;
 import com.lsp.mapper.UserMapper;
+import com.lsp.pojo.MyPage;
 import com.lsp.pojo.score.entity.Score;
 import com.lsp.pojo.score.entity.ScoreDetail;
 import com.lsp.pojo.score.response.*;
@@ -71,13 +73,13 @@ public class ScoreServiceImpl implements ScoreService {
                 scoreDetail.setViewScore(scoreDetail.getViewScore() + 1);
                 break;
             case 3:
-                scoreDetail.setPkScore(scoreDetail.getPkScore() + 1);
+                scoreDetail.setPkScore(scoreDetail.getPkScore() + 6);
                 break;
             case 4:
                 scoreDetail.setAnswerScore(scoreDetail.getAnswerScore() + 1);
                 break;
             case 5:
-                scoreDetail.setAiScore(scoreDetail.getAiScore() + 1);
+                scoreDetail.setAiScore(scoreDetail.getAiScore() + 2);
                 break;
             default:
                 break;
@@ -127,32 +129,37 @@ public class ScoreServiceImpl implements ScoreService {
     }
 
     @Override
-    public ScoreDetailResponse getDetail() {
+    public ScoreDetailResponse getDetail(Integer start, Integer pageSize) {
         //当前用户手机号
         Integer id = MyUtil.getLoginId();
         User user = userMapper.selectById(id);
         String userPhone = user.getUserPhone();
+        //一起的日子
+        String togetherDay = NumberUtil.getTimeDifference(user.getCreateTime(), NumberUtil.getTodayLocalDateTime());
         //倒序日志
+        Page<ScoreDetail> page = new Page<>(start, pageSize);
         QueryWrapper<ScoreDetail> wrapper = new QueryWrapper<>();
         wrapper.eq("user_phone", userPhone).orderByDesc("create_time");
-        List<ScoreDetail> scoreDetails = scoreDetailMapper.selectList(wrapper);
+        Page<ScoreDetail> scoreDetails = scoreDetailMapper.selectPage(page, wrapper);
 
         ArrayList<ScoreLog> logs = new ArrayList<>();
-        for (ScoreDetail sd : scoreDetails) {
+        for (ScoreDetail sd : scoreDetails.getRecords()) {
 //            不知道为什么找不到statement,只能作罢
 //            Integer todayGet = scoreDetailMapper.selectToday(sd);
             Integer todayGet = MyUtil.getTodaySum(sd);
             ArrayList<ScoreTask> list = new ArrayList<>();
-            list.add(new ScoreTask("登录积分",sd.getLoginScore()));
-            list.add(new ScoreTask("文章积分",sd.getArticleScore()));
-            list.add(new ScoreTask("视频积分",sd.getViewScore()));
-            list.add(new ScoreTask("PK积分",sd.getPkScore()));
-            list.add(new ScoreTask("AI积分",sd.getAiScore()));
-            list.add(new ScoreTask("消费积分",sd.getExpenseScore()));
+            list.add(new ScoreTask("登录积分", sd.getLoginScore()));
+            list.add(new ScoreTask("文章积分", sd.getArticleScore()));
+            list.add(new ScoreTask("视频积分", sd.getViewScore()));
+            list.add(new ScoreTask("PK积分", sd.getPkScore()));
+            list.add(new ScoreTask("AI积分", sd.getAiScore()));
+            list.add(new ScoreTask("消费积分", sd.getExpenseScore()));
 
-            logs.add(new ScoreLog(todayGet,list,sd.getCreateTime()));
+            logs.add(new ScoreLog(todayGet, list, sd.getCreateTime()));
         }
-        return new ScoreDetailResponse(userPhone, scoreMapper.selectById(id).getScore(), logs);
+        return new ScoreDetailResponse(userPhone, scoreMapper.selectById(id).getScore(), togetherDay,
+                new MyPage(scoreDetails.getCurrent(), scoreDetails.getPages(),
+                        scoreDetails.getSize(), scoreDetails.getTotal()), logs);
     }
 
     @Override
@@ -170,13 +177,13 @@ public class ScoreServiceImpl implements ScoreService {
 
 
         ArrayList<ScoreTaskDetail> list = new ArrayList<>();
-        list.add(new ScoreTaskDetail("看文章","每有效阅读一篇文章+1分",sd.getArticleScore(),6));
-        list.add(new ScoreTaskDetail("看视频","每有效观看一个视频+1分",sd.getViewScore(),6));
-        list.add(new ScoreTaskDetail("回答问题","每成功回答一个问题+1分",sd.getAnswerScore(),6));
-        list.add(new ScoreTaskDetail("完成pk","胜利+6分,失败+3分",sd.getPkScore(),6));
-        list.add(new ScoreTaskDetail("完成ai模块的学习","每学习一个模块+2分",sd.getAiScore(),6));
+        list.add(new ScoreTaskDetail("看文章", "每有效阅读一篇文章+1分", sd.getArticleScore(), 6));
+        list.add(new ScoreTaskDetail("看视频", "每有效观看一个视频+1分", sd.getViewScore(), 6));
+        list.add(new ScoreTaskDetail("回答问题", "每成功回答一个问题+1分", sd.getAnswerScore(), 6));
+        list.add(new ScoreTaskDetail("完成pk", "胜利+6分,失败+3分", sd.getPkScore(), 6));
+        list.add(new ScoreTaskDetail("完成ai模块的学习", "每学习一个模块+2分", sd.getAiScore(), 6));
 
-        return new ScoreTaskResponse(sumScore,todaySum,NumberUtil.getTimeDifference
-                (user.getCreateTime(), NumberUtil.getTodayLocalDateTime()),list);
+        return new ScoreTaskResponse(sumScore, todaySum, NumberUtil.getTimeDifference
+                (user.getCreateTime(), NumberUtil.getTodayLocalDateTime()), list);
     }
 }

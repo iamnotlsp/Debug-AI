@@ -17,7 +17,7 @@ public interface ScoreService {
 
     ScoreRankResponse getSumRank();
 
-    ScoreDetailResponse getDetail();
+    ScoreDetailResponse getDetail(Integer start, Integer pageSize);
 
     ScoreTaskResponse getScoreTask();
 }
