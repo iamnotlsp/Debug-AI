@@ -322,13 +322,12 @@ public class MemberServiceImpl implements MemberService {
         wrapper.clear();
         LocalDateTime lastWeekLocalDateTime = NumberUtil.getLastWeekLocalDateTime();
         wrapper.eq("user_phone", user.getUserPhone()).ge("create_time", lastWeekLocalDateTime);
-        ArrayList<HashMap> list = new ArrayList<>();
+        ArrayList<Day7Score> list = new ArrayList<>();
         for (ScoreDetail sd1 : scoreDetailMapper.selectList(wrapper)) {
             Integer todayGet1 = MyUtil.getTodaySum(sd1);
             String createTime = sd1.getCreateTime();
-            HashMap<String, Integer> hashMap = new HashMap<>();
-            hashMap.put(createTime, todayGet1);
-            list.add(hashMap);
+            Day7Score score = new Day7Score(createTime,todayGet1);
+            list.add(score);
         }
         MemberScore memberScore = new MemberScore(todayGet, scoreService.getSumScore(), list);
 
