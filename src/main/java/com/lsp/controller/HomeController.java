@@ -1,6 +1,7 @@
 package com.lsp.controller;
 
 import com.lsp.pojo.Result;
+import com.lsp.pojo.home.response.HomeAllResponse;
 import com.lsp.pojo.resource.entity.Resource;
 import com.lsp.service.home.HomeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,9 @@ public class HomeController {
     @Autowired
     private HomeService homeService;
 
-//    @GetMapping("/getSource")
-//    public Result<Resource> getSource()
+    @GetMapping
+    public Result<HomeAllResponse> getAll(){
+        return Result.success("首页内容:",homeService.getAll());
+
+    }
 }

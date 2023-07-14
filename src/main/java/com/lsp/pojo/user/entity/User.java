@@ -1,6 +1,7 @@
 package com.lsp.pojo.user.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.lsp.pojo.user.request.UserInfoRequest;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -76,26 +77,18 @@ public class User implements Serializable {
         this.userPassword = userPassword;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", userPhone='" + userPhone + '\'' +
-                ", userPassword='" + userPassword + '\'' +
-                ", userName='" + userName + '\'' +
-                ", headPhoto='" + headPhoto + '\'' +
-                ", location='" + location + '\'' +
-                ", realName='" + realName + '\'' +
-                ", userAge=" + userAge +
-                ", userSex='" + userSex + '\'' +
-                ", userLikes='" + userLikes + '\'' +
-                ", userInfo='" + userInfo + '\'' +
-                ", groupId=" + groupId +
-                ", achievement='" + achievement + '\'' +
-                ", work='" + work + '\'' +
-                ", createTime=" + createTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) +
-                ", updateTime=" + updateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) +
-                ", isDeleted=" + isDeleted +
-                '}';
+
+    public void finishUserInfo(UserInfoRequest info) {
+        this.userPhone = info.getUserPhone();
+        this.userPassword = info.getUserPassword();
+        this.userName = info.getUserName();
+        this.headPhoto = info.getHeadPhoto();
+        this.location = info.getLocation();
+        this.realName = info.getRealName();
+        this.userAge = info.getUserAge();
+        this.userSex = info.getUserSex();
+        this.userLikes = info.getUserLikes();
+        this.userInfo = info.getUserInfo();
+        this.work = info.getUserWork();
     }
 }

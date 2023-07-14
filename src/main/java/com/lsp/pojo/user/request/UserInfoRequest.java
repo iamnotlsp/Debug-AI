@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserInfoRequest extends User {
+public class UserInfoRequest extends User{
     private String userPhone;
     private String userPassword;
     private String userName;
@@ -23,5 +23,6 @@ public class UserInfoRequest extends User {
     private String userLikes;
     private String userInfo;
     private String userWork;
+
 
 }

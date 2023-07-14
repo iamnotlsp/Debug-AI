@@ -80,7 +80,7 @@ public class MemberServiceImpl implements MemberService {
         if (user == null) {
             return false;
         } else {
-            userMapper.update(info, wrapper);
+            userMapper.update(info,wrapper);
             return true;
         }
 
@@ -326,7 +326,7 @@ public class MemberServiceImpl implements MemberService {
         for (ScoreDetail sd1 : scoreDetailMapper.selectList(wrapper)) {
             Integer todayGet1 = MyUtil.getTodaySum(sd1);
             String createTime = sd1.getCreateTime();
-            Day7Score score = new Day7Score(createTime,todayGet1);
+            Day7Score score = new Day7Score(createTime, todayGet1);
             list.add(score);
         }
         MemberScore memberScore = new MemberScore(todayGet, scoreService.getSumScore(), list);
