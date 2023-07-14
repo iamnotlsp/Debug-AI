@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CarouselInfo {
-    private String photoUrl;
-    private String title;
-    private Scheme scheme;
+public class SchemeSearch extends Scheme{
+    private Integer type;
+    private String route;
+    private String keyword;
 }

@@ -296,6 +296,15 @@ public class MemberServiceImpl implements MemberService {
     public MemberMainResponse getMain() {
         Integer id = MyUtil.getLoginId();
         User user = userMapper.selectById(id);
+
+        //积分明细表新建一个数据
+        QueryWrapper<ScoreDetail> wrapper1 = new QueryWrapper<ScoreDetail>().eq("user_phone", user.getUserPhone());
+        wrapper1.ge("create_time", NumberUtil.getTodayLocalDateTime());
+        if (scoreDetailMapper.selectOne(wrapper1) == null) {
+            scoreDetailMapper.insert(new ScoreDetail(user.getUserPhone()));
+        }
+
+
         //得到用户简略消息
         MemberBrief memberBrief = new MemberBrief(user.getUserPhone(), user.getUserName(), user.getHeadPhoto(),
                 user.getUserLikes(), user.getUserInfo(), user.getAchievement(),
@@ -320,8 +329,9 @@ public class MemberServiceImpl implements MemberService {
         Integer todayGet = MyUtil.getTodaySum(sd);
         //近七天得分
         wrapper.clear();
-        LocalDateTime lastWeekLocalDateTime = NumberUtil.getLastWeekLocalDateTime();
+        LocalDateTime lastWeekLocalDateTime = NumberUtil.getPreviousSixDaysLocalDateTime();
         wrapper.eq("user_phone", user.getUserPhone()).ge("create_time", lastWeekLocalDateTime);
+        System.out.println(lastWeekLocalDateTime);
         ArrayList<Day7Score> list = new ArrayList<>();
         for (ScoreDetail sd1 : scoreDetailMapper.selectList(wrapper)) {
             Integer todayGet1 = MyUtil.getTodaySum(sd1);

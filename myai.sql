@@ -11,7 +11,7 @@
  Target Server Version : 50719
  File Encoding         : 65001
 
- Date: 14/07/2023 10:12:50
+ Date: 14/07/2023 16:45:55
 */
 
 SET NAMES utf8mb4;
@@ -30,6 +30,7 @@ CREATE TABLE `resource`  (
   `resource_describe` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '描述',
   `resource_content` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '内容',
   `resource_photo` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '缩略图',
+  `resource_url` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '跳转链接',
   `resource_reads` int(11) NULL DEFAULT 0 COMMENT '阅读量',
   `resource_search` int(11) NULL DEFAULT 0 COMMENT '搜索量',
   `resource_likes` int(11) NULL DEFAULT 0 COMMENT '点赞数',
@@ -39,14 +40,16 @@ CREATE TABLE `resource`  (
   `is_deleted` int(11) NULL DEFAULT NULL COMMENT '是否被删除',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `resource_id`(`resource_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '资源总表' ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '资源总表' ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of resource
 -- ----------------------------
-INSERT INTO `resource` VALUES (1, 1, 1, '视觉识别', '什么是视觉识别', '视觉识别的作者', '这个就是视觉识别', NULL, 0, 0, 0, 0, '2023-07-03 10:00:11', '2023-07-08 10:01:50', NULL);
-INSERT INTO `resource` VALUES (2, 2, 1, '深度学习', '深度学习的奥秘', '作者等描述', '太神奇啦深度学习', NULL, 2, 1, 1, 0, '2023-07-10 10:12:44', NULL, NULL);
-INSERT INTO `resource` VALUES (3, 3, 3, '答疑', '十万个为什么', '十万个为什么的为什么', '十万伏特电', NULL, 0, 0, 0, 0, '2023-07-12 14:21:54', NULL, NULL);
+INSERT INTO `resource` VALUES (1, 1, 3, '视觉识别', '什么是视觉识别', '视觉识别的作者', '这个就是视觉识别', NULL, NULL, 0, 0, 0, 0, '2023-07-03 10:00:11', '2023-07-14 15:38:47', NULL);
+INSERT INTO `resource` VALUES (2, 2, 3, '深度学习', '深度学习的奥秘', '作者等描述', '太神奇啦深度学习', NULL, NULL, 2, 1, 1, 0, '2023-07-10 10:12:44', '2023-07-14 15:38:49', NULL);
+INSERT INTO `resource` VALUES (3, 3, 1, '答疑', '十万个为什么', '十万个为什么的为什么', '十万伏特电', NULL, NULL, 0, 0, 0, 0, '2023-07-12 14:21:54', '2023-07-14 15:38:31', NULL);
+INSERT INTO `resource` VALUES (4, 4, 1, '答疑', '为什么这么安静', '安静的作者，安静的事', '为什么这么安静这一定是有原因的', NULL, NULL, 0, 0, 0, 0, '2023-07-14 15:32:04', '2023-07-14 15:33:07', NULL);
+INSERT INTO `resource` VALUES (5, 5, 1, '答疑', '你玩原神吗', '你说得对', '但是原神是一款', NULL, NULL, 0, 0, 0, 0, '2023-07-14 15:32:31', '2023-07-14 15:33:02', NULL);
 
 -- ----------------------------
 -- Table structure for resource_comment
@@ -91,6 +94,27 @@ CREATE TABLE `resource_image`  (
 -- ----------------------------
 
 -- ----------------------------
+-- Table structure for resource_show_map
+-- ----------------------------
+DROP TABLE IF EXISTS `resource_show_map`;
+CREATE TABLE `resource_show_map`  (
+  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `resource_show` int(11) NOT NULL COMMENT '资源展现形式',
+  `resource_id` int(10) UNSIGNED NOT NULL COMMENT '资源id',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `resource13`(`resource_id`) USING BTREE,
+  CONSTRAINT `resource13` FOREIGN KEY (`resource_id`) REFERENCES `resource` (`resource_id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用来获取展现形式对应的资源id' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of resource_show_map
+-- ----------------------------
+INSERT INTO `resource_show_map` VALUES (1, 1, 1);
+INSERT INTO `resource_show_map` VALUES (2, 1, 2);
+INSERT INTO `resource_show_map` VALUES (3, 2, 3);
+INSERT INTO `resource_show_map` VALUES (4, 2, 4);
+
+-- ----------------------------
 -- Table structure for score
 -- ----------------------------
 DROP TABLE IF EXISTS `score`;
@@ -110,7 +134,7 @@ CREATE TABLE `score`  (
 -- ----------------------------
 -- Records of score
 -- ----------------------------
-INSERT INTO `score` VALUES (1, '15990771449', 1, 155);
+INSERT INTO `score` VALUES (1, '15990771449', 1, 161);
 INSERT INTO `score` VALUES (2, '123456', 1, 10);
 INSERT INTO `score` VALUES (3, '110', 1, 15);
 
@@ -132,7 +156,7 @@ CREATE TABLE `score_detail`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `phone8`(`user_phone`) USING BTREE,
   CONSTRAINT `phone8` FOREIGN KEY (`user_phone`) REFERENCES `user` (`user_phone`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 14 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of score_detail
@@ -146,6 +170,7 @@ INSERT INTO `score_detail` VALUES (7, '15990771449', 1, 0, 0, 0, 0, 0, 0, '2023-
 INSERT INTO `score_detail` VALUES (10, '15990771449', 1, 0, 0, 0, 0, 0, 0, '2023-07-11 09:56:15');
 INSERT INTO `score_detail` VALUES (11, '15990771449', 1, 0, 0, 0, 0, 0, 0, '2023-07-12 10:45:45');
 INSERT INTO `score_detail` VALUES (12, '15990771449', 1, 0, 0, 0, 0, 0, 0, '2023-07-13 09:53:38');
+INSERT INTO `score_detail` VALUES (13, '15990771449', 1, 1, 0, 0, 18, 0, 0, '2023-07-14 11:29:13');
 
 -- ----------------------------
 -- Table structure for study_plan
@@ -169,9 +194,6 @@ CREATE TABLE `study_plan`  (
 -- ----------------------------
 -- Records of study_plan
 -- ----------------------------
-INSERT INTO `study_plan` VALUES (1, '15990771449', '第一次测试', '2023-07-10 00:00:00', '2023-07-15 00:00:00', 0, '2023-07-10 17:02:14', '2023-07-11 16:14:22', 0);
-INSERT INTO `study_plan` VALUES (2, '15990771449', '第一次测试', '2023-07-10 00:00:00', '2023-07-15 00:00:00', 0, '2023-07-10 17:08:51', '2023-07-11 16:14:23', 0);
-INSERT INTO `study_plan` VALUES (7, '15990771449', '我的学习计划1.0', '2023-07-11 00:00:00', '2023-07-15 00:00:00', 1, '2023-07-11 11:02:36', '2023-07-11 16:23:47', 1);
 INSERT INTO `study_plan` VALUES (8, '15990771449', '我的学习计划2.0', '2023-07-11 00:00:00', '2023-07-15 00:00:00', 0, '2023-07-11 16:24:22', '2023-07-11 16:24:22', 0);
 INSERT INTO `study_plan` VALUES (9, '15990771449', '我的学习计划3.0', '2023-07-12 00:00:00', '2023-07-15 00:00:00', 0, '2023-07-12 11:21:32', '2023-07-12 11:22:04', 1);
 
@@ -199,7 +221,6 @@ CREATE TABLE `study_plan_event`  (
 -- ----------------------------
 -- Records of study_plan_event
 -- ----------------------------
-INSERT INTO `study_plan_event` VALUES (2, '15990771449', 1, '做作业', '2023-07-10 17:05:39', 1, '2023-07-10 17:07:33', '2023-07-11 16:14:05', 0);
 INSERT INTO `study_plan_event` VALUES (14, '15990771449', 8, '读语文', '2023-07-11 00:00:00', 0, '2023-07-11 16:24:22', '2023-07-11 16:24:22', 0);
 INSERT INTO `study_plan_event` VALUES (15, '15990771449', 8, '读数学', '2023-07-12 00:00:00', 0, '2023-07-11 16:24:22', '2023-07-11 16:24:22', 0);
 INSERT INTO `study_plan_event` VALUES (16, '15990771449', 8, '读英语', '2023-07-13 00:00:00', 0, '2023-07-11 16:24:22', '2023-07-11 16:24:22', 0);
@@ -257,9 +278,9 @@ CREATE TABLE `user`  (
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES (1, '15990771449', '123456', '朱元璋', '', '南京', '朱重八', 35, '男', '', '', 1, NULL, '', '2023-07-04 19:35:31', '2023-07-13 11:13:35', NULL);
+INSERT INTO `user` VALUES (1, '15990771449', '123456', '朱元璋', '', '南京', '朱重八', 35, '男', '答疑', '', 1, NULL, '', '2023-07-04 19:35:31', '2023-07-14 16:28:17', NULL);
 INSERT INTO `user` VALUES (2, '123456', '123456', '美猴王', NULL, '浙江嘉兴', '孙悟空', 27, '男', '西游记', NULL, 1, NULL, NULL, '2023-07-06 19:37:34', '2023-07-06 19:37:34', NULL);
-INSERT INTO `user` VALUES (3, '110', '123456', NULL, NULL, NULL, NULL, 25, '男', NULL, NULL, 1, NULL, NULL, '2023-07-06 19:40:02', '2023-07-06 19:40:02', NULL);
+INSERT INTO `user` VALUES (3, '110', '123456', '蔡徐坤', NULL, NULL, NULL, 25, '男', NULL, NULL, 1, NULL, NULL, '2023-07-06 19:40:02', '2023-07-14 15:20:12', NULL);
 
 -- ----------------------------
 -- Table structure for user_collection

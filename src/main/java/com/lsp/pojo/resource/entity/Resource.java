@@ -23,6 +23,7 @@ public class Resource implements Serializable {
   private String resourceDescribe;
   private String resourceContent;
   private String resourcePhoto;
+  private String resourceUrl;
   private Integer resourceReads;
   private Integer resourceSearch;
   private Integer resourceLikes;

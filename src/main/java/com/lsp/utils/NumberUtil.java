@@ -90,6 +90,15 @@ public class NumberUtil {
 
 
     /**
+     * 获取前六天的LocalDateTime
+     *
+     */
+    public static LocalDateTime getPreviousSixDaysLocalDateTime() {
+        return LocalDateTime.now().minusDays(6);
+    }
+
+
+    /**
      * 获取时间差值
      *
      * @param localDateTime1

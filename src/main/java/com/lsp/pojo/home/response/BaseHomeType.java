@@ -7,7 +7,7 @@ import lombok.Data;
  */
 @Data
 public abstract class BaseHomeType {
-    public static final int TYPE1 = 1; // 轮播图
-    public static final int TYPE2 = 2; // 短视频
+    public static final int Carousel = 1; // 轮播图
+    public static final int Like = 2; // 推荐内容
     public static final int TYPE3 = 3; // 视频
 }

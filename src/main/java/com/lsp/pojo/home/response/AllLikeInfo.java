@@ -4,14 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 /**
  * @Author: LinShanPeng
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CarouselInfo {
-    private String photoUrl;
-    private String title;
-    private Scheme scheme;
+public class AllLikeInfo extends BaseHomeType {
+    private Integer type;
+    private List<LikeInfo> like;
 }
