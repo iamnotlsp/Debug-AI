@@ -13,7 +13,9 @@ import com.lsp.pojo.member.entity.UserHistory;
 import com.lsp.pojo.member.entity.UserNote;
 import com.lsp.pojo.member.request.PlanRequest;
 import com.lsp.pojo.member.response.*;
+import com.lsp.pojo.member.response.subclass.*;
 import com.lsp.pojo.resource.entity.Resource;
+import com.lsp.pojo.score.entity.Score;
 import com.lsp.pojo.score.entity.ScoreDetail;
 import com.lsp.pojo.score.response.ScoreRankResponse;
 import com.lsp.pojo.study.entity.StudyPlan;
@@ -22,6 +24,7 @@ import com.lsp.pojo.study.response.PlanResponse;
 import com.lsp.pojo.user.entity.User;
 import com.lsp.pojo.member.entity.UserCollection;
 import com.lsp.pojo.user.request.UserInfoRequest;
+import com.lsp.service.group.GroupService;
 import com.lsp.service.member.MemberService;
 import com.lsp.service.score.ScoreService;
 import com.lsp.utils.MyUtil;
@@ -32,7 +35,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -64,6 +66,9 @@ public class MemberServiceImpl implements MemberService {
     private ScoreDetailMapper scoreDetailMapper;
 
     @Autowired
+    private ScoreMapper scoreMapper;
+
+    @Autowired
     private ScoreService scoreService;
 
     @Autowired
@@ -71,6 +76,10 @@ public class MemberServiceImpl implements MemberService {
 
     @Autowired
     private StudyEventMapper studyEventMapper;
+
+    @Autowired
+    private GroupService groupService;
+
 
     @Override
     public boolean finishInfo(UserInfoRequest info) {
@@ -80,7 +89,11 @@ public class MemberServiceImpl implements MemberService {
         if (user == null) {
             return false;
         } else {
-            userMapper.update(info,wrapper);
+            userMapper.update(info, wrapper);
+            Score score = new Score();
+            score.setGroupId(info.getGroupId());
+            scoreMapper.update(score, new QueryWrapper<Score>().eq("user_phone", info.getUserPhone()));
+            groupService.getGroupNums();
             return true;
         }
 
@@ -327,13 +340,19 @@ public class MemberServiceImpl implements MemberService {
         wrapper.ge("create_time", NumberUtil.getTodayLocalDateTime());
         ScoreDetail sd = scoreDetailMapper.selectOne(wrapper);
         Integer todayGet = MyUtil.getTodaySum(sd);
-        //近七天得分
+        /*近七天得分
+            将获得前6天时间戳改为倒序获得7天数据
+        */
         wrapper.clear();
-        LocalDateTime lastWeekLocalDateTime = NumberUtil.getPreviousSixDaysLocalDateTime();
-        wrapper.eq("user_phone", user.getUserPhone()).ge("create_time", lastWeekLocalDateTime);
-        System.out.println(lastWeekLocalDateTime);
+//        LocalDateTime lastWeekLocalDateTime = NumberUtil.getPreviousSixDaysLocalDateTime();
+//        wrapper.eq("user_phone", user.getUserPhone()).ge("create_time", lastWeekLocalDateTime);
+//        System.out.println(lastWeekLocalDateTime);
+
+        //limit 7
+        Page<ScoreDetail> page = new Page<>(1,7);
+        wrapper.eq("user_phone",user.getUserPhone()).orderByDesc("create_time");
         ArrayList<Day7Score> list = new ArrayList<>();
-        for (ScoreDetail sd1 : scoreDetailMapper.selectList(wrapper)) {
+        for (ScoreDetail sd1 : scoreDetailMapper.selectPage(page,wrapper).getRecords()) {
             Integer todayGet1 = MyUtil.getTodaySum(sd1);
             String createTime = sd1.getCreateTime();
             Day7Score score = new Day7Score(createTime, todayGet1);
@@ -373,11 +392,14 @@ public class MemberServiceImpl implements MemberService {
         }
 
         //得到排行榜
-        ScoreRankResponse rank = scoreService.getSumRank();
+        ScoreRankResponse rank = scoreService.getSumRank3();
         MemberGroup memberGroup = new MemberGroup(rank.getGroupId(), rank.getGroupName(),
                 rank.getPeopleNums(), rank.getGroupRankList());
 
-        return new MemberMainResponse(memberBrief, member4Part, memberScore, memberStudyPlan, memberGroup);
+        //淘友圈
+        GroupForumResponse groupForum = groupService.getGroupForum(1, 3);
+        return new MemberMainResponse(memberBrief, member4Part, memberScore, memberStudyPlan,
+                memberGroup, groupForum);
     }
 
 

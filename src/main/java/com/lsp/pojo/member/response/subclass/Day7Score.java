@@ -1,4 +1,4 @@
-package com.lsp.pojo.member.response;
+package com.lsp.pojo.member.response.subclass;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

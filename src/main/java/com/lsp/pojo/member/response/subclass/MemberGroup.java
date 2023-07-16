@@ -1,4 +1,4 @@
-package com.lsp.pojo.member.response;
+package com.lsp.pojo.member.response.subclass;
 
 import com.lsp.pojo.score.response.GroupRank;
 import lombok.AllArgsConstructor;

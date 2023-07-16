@@ -16,11 +16,11 @@ public class ResourceComment implements Serializable {
 
   private Integer id;
   private String userPhone;
-  private String userName;
+  private Integer group_id;
   private Integer resourceId;
   private String comment;
   private Integer commentLikes;
-
+  private String createTime;
 
 
 }

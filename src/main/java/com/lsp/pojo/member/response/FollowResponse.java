@@ -1,6 +1,6 @@
 package com.lsp.pojo.member.response;
 
-import com.lsp.pojo.resource.entity.Resource;
+import com.lsp.pojo.member.response.subclass.Followers;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

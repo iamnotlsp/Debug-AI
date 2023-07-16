@@ -1,4 +1,4 @@
-package com.lsp.pojo.member.response;
+package com.lsp.pojo.member.response.subclass;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,16 +10,14 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Collections {
+public class GroupForumInfo {
+    private String userName;
+    private String headPhoto;
     private Integer resourceId;
-    private Integer resourceType;
-    private String resourceLabel;
     private String resourceTitle;
-    private String resourceDescribe;
-    private String resourceContent;
     private String resourcePhoto;
-    private Integer resourceReads;
-    private Integer resourceSearch;
+    private String comment;
     private Integer resourceLikes;
+    private Integer resourceComments;
     private String createTime;
 }

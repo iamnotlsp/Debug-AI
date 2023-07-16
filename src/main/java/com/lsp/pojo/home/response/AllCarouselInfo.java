@@ -1,6 +1,6 @@
-package com.lsp.pojo.member.request;
+package com.lsp.pojo.home.response;
 
-import com.lsp.pojo.member.response.subclass.PlanPost;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,6 +13,8 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PlanRequest {
-    private List<PlanPost> planPosts;
+public class AllCarouselInfo extends BaseHomeType{
+    private Integer type;
+    private List<CarouselInfo> carousel;
+
 }

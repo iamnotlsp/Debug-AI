@@ -1,4 +1,4 @@
-package com.lsp.pojo.member.response;
+package com.lsp.pojo.member.response.subclass;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,7 +10,10 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PlanPost {
+public class MemberStudyEvent {
+    private Integer eventId;
     private String eventName;
     private String eventTime;
+    private Integer eventState;
+
 }

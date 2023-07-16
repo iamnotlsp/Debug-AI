@@ -3,9 +3,11 @@ package com.lsp.controller;
 import com.lsp.pojo.Result;
 import com.lsp.pojo.member.request.PlanRequest;
 import com.lsp.pojo.member.response.*;
+import com.lsp.pojo.member.response.subclass.MemberStudyEvent;
 import com.lsp.pojo.study.response.PlanResponse;
 import com.lsp.pojo.user.entity.User;
 import com.lsp.pojo.user.request.UserInfoRequest;
+import com.lsp.service.group.GroupService;
 import com.lsp.service.member.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -21,9 +23,18 @@ public class MemberController {
     @Autowired
     private MemberService memberService;
 
+    @Autowired
+    private GroupService groupService;
+
     @GetMapping
     public Result<MemberMainResponse> getMain() {
         return Result.success("我的:", memberService.getMain());
+    }
+
+    @GetMapping("/forum/get")
+    public Result<GroupForumResponse> getMoreForum(@RequestParam(defaultValue = "2") Integer start,
+                                                   @RequestParam(defaultValue = "3") Integer pageSize) {
+        return Result.success("更多好友圈内容:", groupService.getGroupForum(start, pageSize));
     }
 
     @PostMapping("/info/post")
@@ -86,10 +97,10 @@ public class MemberController {
     }
 
     @PostMapping("/note/delete")
-    public Result<String> deleteNote(Integer noteId){
-        if (memberService.deleteNoteById(noteId)){
+    public Result<String> deleteNote(Integer noteId) {
+        if (memberService.deleteNoteById(noteId)) {
             return Result.success("删除成功");
-        }else {
+        } else {
             return Result.error("删除失败");
         }
     }
@@ -101,8 +112,8 @@ public class MemberController {
     }
 
     @PostMapping("/plan/post")
-    public Result<String> addPlan(String planName, String startTime, String endTime,
-                                  @RequestBody PlanRequest planRequest) {
+    public Result<PlanResponse> addPlan(String planName, String startTime, String endTime,
+                                        @RequestBody PlanRequest planRequest) {
         Integer planId = memberService.addPlan(planName, startTime, endTime);
         if (planId == 0) {
             return Result.error("添加失败");
@@ -127,7 +138,7 @@ public class MemberController {
     public Result<String> deletePlan(Integer planId) {
         if (memberService.deletePlanById(planId)) {
             return Result.success("删除成功");
-        }else {
+        } else {
             return Result.error("删除失败");
         }
     }

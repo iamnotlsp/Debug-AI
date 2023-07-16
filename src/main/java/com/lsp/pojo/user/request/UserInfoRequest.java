@@ -22,6 +22,7 @@ public class UserInfoRequest extends User{
     private String userSex;
     private String userLikes;
     private String userInfo;
+    private Integer groupId;
     private String userWork;
 
 

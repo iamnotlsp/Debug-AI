@@ -1,6 +1,7 @@
 package com.lsp.pojo.member.response;
 
 import com.lsp.pojo.MyPage;
+import com.lsp.pojo.member.response.subclass.Notes;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

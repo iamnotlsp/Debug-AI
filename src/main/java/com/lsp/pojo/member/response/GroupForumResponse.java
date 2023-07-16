@@ -1,6 +1,6 @@
-package com.lsp.pojo.member.request;
+package com.lsp.pojo.member.response;
 
-import com.lsp.pojo.member.response.subclass.PlanPost;
+import com.lsp.pojo.member.response.subclass.GroupForumInfo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,6 +13,6 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PlanRequest {
-    private List<PlanPost> planPosts;
+public class GroupForumResponse {
+    private List<GroupForumInfo> list;
 }

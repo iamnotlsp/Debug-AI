@@ -1,5 +1,6 @@
 package com.lsp.pojo.member.response;
 
+import com.lsp.pojo.member.response.subclass.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,5 +17,5 @@ public class MemberMainResponse {
     private MemberScore memberScore;
     private MemberStudyPlan memberStudyPlan;
     private MemberGroup memberGroup;
-
+    private GroupForumResponse groupForumResponse;
 }

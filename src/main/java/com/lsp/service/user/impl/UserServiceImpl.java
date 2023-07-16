@@ -52,7 +52,8 @@ public class UserServiceImpl implements UserService {
                     scoreDetailMapper.insert(new ScoreDetail(user.getUserPhone()));
                 }
                 //总积分更改
-                Score score = scoreMapper.selectById(user.getId());
+                Score score = scoreMapper.selectOne(new QueryWrapper<Score>()
+                        .eq("user_phone",user.getUserPhone()));
                 score.setScore(score.getScore() + 1);
                 scoreMapper.updateById(score);
 

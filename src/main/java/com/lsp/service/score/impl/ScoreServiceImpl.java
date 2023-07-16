@@ -129,6 +129,32 @@ public class ScoreServiceImpl implements ScoreService {
     }
 
     @Override
+    public ScoreRankResponse getSumRank3() {
+        Integer id = Integer.valueOf(String.valueOf(StpUtil.getLoginId()));
+        User user = userMapper.selectById(id);
+        //排序该组的积分
+        Integer groupId = user.getGroupId();
+        UserGroup group = groupMapper.selectByGroupId(groupId);
+        QueryWrapper<Score> wrapper = new QueryWrapper<>();
+        wrapper.eq("group_id", groupId).orderByDesc("score");
+
+        List<Score> scores = scoreMapper.selectList(wrapper);
+        ArrayList<GroupRank> list = new ArrayList<>();
+        int size = scores.size();
+        if (size>3){
+            size = 3;
+        }
+        for (int i = 1; i <= size; i++) {
+            Score score = scores.get(i - 1);
+            QueryWrapper<User> wrapper1 = new QueryWrapper<>();
+            User user1 = userMapper.selectOne(wrapper1.eq("user_phone", score.getUserPhone()));
+            list.add(new GroupRank(i, user1.getUserName(), score.getScore()));
+        }
+        return new ScoreRankResponse(groupId, group.getGroupName(), groupService.getGroupNums(), list);
+
+    }
+
+    @Override
     public ScoreDetailResponse getDetail(Integer start, Integer pageSize) {
         //当前用户手机号
         Integer id = MyUtil.getLoginId();

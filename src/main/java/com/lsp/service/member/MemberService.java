@@ -2,6 +2,7 @@ package com.lsp.service.member;
 
 import com.lsp.pojo.member.request.PlanRequest;
 import com.lsp.pojo.member.response.*;
+import com.lsp.pojo.member.response.subclass.MemberStudyEvent;
 import com.lsp.pojo.study.response.PlanResponse;
 import com.lsp.pojo.user.request.UserInfoRequest;
 
