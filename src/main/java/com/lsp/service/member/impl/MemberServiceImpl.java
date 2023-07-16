@@ -297,8 +297,8 @@ public class MemberServiceImpl implements MemberService {
         for (UserHistory record : historyPage.getRecords()) {
             Resource resource = resourceMapper.selectById(record.getResourceId());
             list.add(new Histories(resource.getResourceId(), resource.getResourceType(),
-                    resource.getResourceLabel(), resource.getResourceTitle(), resource.getResourceDescribe(),
-                    record.getCreateTime()));
+                    resource.getResourceLabel(), resource.getResourceTitle(), resource.getResourceAuthorName(),
+                    resource.getResourceAuthorHead(), record.getCreateTime()));
         }
         return new HistoryResponse(user.getUserPhone(), Math.toIntExact(historyPage.getTotal()),
                 new MyPage(historyPage.getCurrent(), historyPage.getPages(), historyPage.getSize(), historyPage.getTotal()),

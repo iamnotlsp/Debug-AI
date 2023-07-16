@@ -1,4 +1,4 @@
-package com.lsp.pojo.home.response;
+package com.lsp.pojo.home.response.subclass;
 
 import com.lsp.pojo.resource.entity.Resource;
 import lombok.AllArgsConstructor;
@@ -16,18 +16,21 @@ import java.util.List;
 public class LikeInfo {
     private Integer resourceId;
     private Integer resourceType;
-    private String Label;
-    private String Title;
-    private String describe;
+    private String label;
+    private String title;
+    private String authorHead;
+    private String authorName;
     private Integer reads;
     private Integer likes;
+    private Scheme scheme;
 
     public LikeInfo(Resource resource) {
         this.resourceId = resource.getResourceId();
         this.resourceType = resource.getResourceType();
-        Label = resource.getResourceLabel();
-        Title = resource.getResourceTitle();
-        this.describe = resource.getResourceDescribe();
+        this.label = resource.getResourceLabel();
+        this.title = resource.getResourceTitle();
+        this.authorHead = resource.getResourceAuthorHead();
+        this.authorName = resource.getResourceAuthorName();
         this.reads = resource.getResourceReads();
         this.likes = resource.getResourceLikes();
     }

@@ -13,7 +13,8 @@ public class Histories {
     private Integer resourceType;
     private String resourceLabel;
     private String resourceTitle;
-    private String resourceDescribe;
+    private String resourceAuthorName;
+    private String resourceAuthorHead;
     private String createTime;
 
 }

@@ -1,11 +1,8 @@
-package com.lsp.pojo.home.response;
+package com.lsp.pojo.home.response.subclass;
 
-import com.lsp.pojo.home.response.subclass.LikeInfo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 /**
  * @Author: LinShanPeng
@@ -13,7 +10,8 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AllLikeInfo extends BaseHomeType {
+public class SchemeSearch extends Scheme{
     private Integer type;
-    private List<LikeInfo> like;
+    private String route;
+    private String keyword;
 }

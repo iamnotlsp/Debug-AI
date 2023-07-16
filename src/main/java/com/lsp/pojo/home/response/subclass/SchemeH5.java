@@ -1,4 +1,4 @@
-package com.lsp.pojo.home.response;
+package com.lsp.pojo.home.response.subclass;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SchemeSearch extends Scheme{
+public class SchemeH5 extends Scheme{
     private Integer type;
     private String route;
-    private String keyword;
+    private String url;
 }

@@ -1,4 +1,4 @@
-package com.lsp.pojo.home.response;
+package com.lsp.pojo.home.response.subclass;
 
 /**
  * @Author: LinShanPeng
