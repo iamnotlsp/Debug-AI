@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CarouselInfo {
-    private String photoUrl;
+    private String photo;
     private String title;
     private Scheme scheme;
 }

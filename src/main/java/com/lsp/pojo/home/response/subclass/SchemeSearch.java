@@ -11,7 +11,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SchemeSearch extends Scheme{
-    private Integer type;
-    private String route;
+    private Integer type = 2;
+    private String route = "跳转搜索";
     private String keyword;
+
+    public SchemeSearch(String keyword) {
+        this.keyword = keyword;
+    }
 }

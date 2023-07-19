@@ -11,18 +11,20 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class HotTopicInfo {
-    private Integer rankings;
+public class NewInfo {
     private String title;
     private String photo;
-    private Integer likes;
-    private Integer comments;
+    private String author;
+    private String authorHead;
+    private Integer readHot;
     private Scheme scheme;
 
-    public HotTopicInfo(Resource resource) {
+    public NewInfo(Resource resource, Scheme scheme) {
         this.title = resource.getResourceTitle();
         this.photo = resource.getResourcePhoto();
-        this.likes = resource.getResourceLikes();
-        this.comments = resource.getResourceComments();
+        this.author = resource.getResourceAuthorName();
+        this.authorHead = resource.getResourceAuthorHead();
+        this.readHot = resource.getResourceReads() * 10 + 5;
+        this.scheme = scheme;
     }
 }

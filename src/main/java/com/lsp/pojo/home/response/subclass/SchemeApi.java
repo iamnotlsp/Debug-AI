@@ -10,12 +10,12 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SchemeH5 extends Scheme {
-    private Integer type = 1;
-    private String route = "跳转链接";
-    private String url;
+public class SchemeApi  extends Scheme{
+    private Integer type = 5;
+    private String route = "调用接口";
+    private String apiPath;
 
-    public SchemeH5(String url) {
-        this.url = url;
+    public SchemeApi(String apiPath) {
+        this.apiPath = apiPath;
     }
 }

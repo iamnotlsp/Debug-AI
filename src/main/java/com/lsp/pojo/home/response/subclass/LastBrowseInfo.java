@@ -10,12 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SchemeH5 extends Scheme {
-    private Integer type = 1;
-    private String route = "跳转链接";
-    private String url;
-
-    public SchemeH5(String url) {
-        this.url = url;
-    }
+public class LastBrowseInfo {
+    private String resourceTitle;
+    private Scheme scheme;
 }

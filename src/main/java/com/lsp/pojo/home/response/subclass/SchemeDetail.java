@@ -11,7 +11,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SchemeDetail extends Scheme{
-    private Integer type;
-    private String route;
+    private Integer type = 3;
+    private String route = "详细资源";
     private Integer resourceId;
+
+    public SchemeDetail(Integer resourceId) {
+        this.resourceId = resourceId;
+    }
 }

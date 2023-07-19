@@ -19,6 +19,7 @@ public class Resource implements Serializable {
   private Integer resourceId;
   private Integer resourceType;
   private String resourceLabel;
+  private String resourceShow;
   private String resourceTitle;
   private String resourceAuthorName;
   private String resourceAuthorHead;

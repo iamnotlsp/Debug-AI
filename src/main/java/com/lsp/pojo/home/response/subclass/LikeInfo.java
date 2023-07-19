@@ -14,23 +14,21 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class LikeInfo {
-    private Integer resourceId;
     private Integer resourceType;
     private String label;
     private String title;
     private String authorHead;
-    private String authorName;
+    private String author;
     private Integer reads;
     private Integer likes;
     private Scheme scheme;
 
     public LikeInfo(Resource resource) {
-        this.resourceId = resource.getResourceId();
         this.resourceType = resource.getResourceType();
         this.label = resource.getResourceLabel();
         this.title = resource.getResourceTitle();
         this.authorHead = resource.getResourceAuthorHead();
-        this.authorName = resource.getResourceAuthorName();
+        this.author = resource.getResourceAuthorName();
         this.reads = resource.getResourceReads();
         this.likes = resource.getResourceLikes();
     }
