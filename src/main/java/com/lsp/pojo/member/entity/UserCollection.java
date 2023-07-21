@@ -2,6 +2,7 @@ package com.lsp.pojo.member.entity;
 
 
 
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,6 +24,13 @@ public class UserCollection implements Serializable {
     private Integer id;
     private String userPhone;
     private Integer resourceId;
-    private LocalDateTime createTime;
+    private String createTime;
+    @TableLogic(value = "0",delval = "1")
+    private Integer isDeleted;
 
+
+    public UserCollection(String userPhone, Integer resourceId) {
+        this.userPhone = userPhone;
+        this.resourceId = resourceId;
+    }
 }

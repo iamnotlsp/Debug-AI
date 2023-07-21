@@ -45,4 +45,5 @@ public interface MemberService {
     boolean deletePlanById(Integer planId);
 
     boolean deleteNoteById(Integer noteId);
+
 }

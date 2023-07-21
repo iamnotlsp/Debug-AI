@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Result<T> {
     private Integer code;//响应码，0 代表成功; 1 代表失败
-    private String msg;  //响应信息 描述字符串
+    private String message;  //响应信息 描述字符串
     private T data; //返回的数据
 
     //增删改 成功响应
