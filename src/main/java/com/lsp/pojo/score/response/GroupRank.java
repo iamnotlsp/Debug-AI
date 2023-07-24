@@ -13,5 +13,6 @@ import lombok.NoArgsConstructor;
 public class GroupRank {
     private Integer position;
     private String userName;
+    private String userHead;
     private Integer score;
 }

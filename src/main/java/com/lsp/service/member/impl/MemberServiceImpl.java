@@ -29,12 +29,15 @@ import com.lsp.service.member.MemberService;
 import com.lsp.service.score.ScoreService;
 import com.lsp.utils.MyUtil;
 import com.lsp.utils.NumberUtil;
+import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -207,6 +210,53 @@ public class MemberServiceImpl implements MemberService {
         }
     }
 
+    /**
+     * 获取学习周报
+     *
+     * @return
+     */
+    @Override
+    public ReportResponse getReport() {
+        Integer loginId = MyUtil.getLoginId();
+        User user = userMapper.selectById(loginId);
+
+        //得到一周的积分详细（周报）
+        List<ScoreDetail> scoreDetails = scoreDetailMapper.selectList(new QueryWrapper<ScoreDetail>()
+                .eq("user_phone", user.getUserPhone())
+                .ge("create_time", NumberUtil.getLastWeekLocalDateTime()));
+        Integer scoreSum = 0;
+        Integer scoreConsume = 0;
+        for (ScoreDetail scoreDetail : scoreDetails) {
+            scoreSum += scoreDetail.getSumScore();
+            scoreConsume += scoreDetail.getExpenseScore();
+        }
+        WeekReportInfo reportInfo = new WeekReportInfo(scoreSum, scoreConsume);
+
+        //得到两个积分数据
+        Score score = scoreMapper.selectOne(new QueryWrapper<Score>()
+                .eq("user_phone", user.getUserPhone()));
+        WeekScoreInfo scoreInfo = new WeekScoreInfo(scoreSum, score.getScore());
+
+        //学习数据（死数据）
+        ArrayList<WeekStudyInfo> studyInfos = new ArrayList<>();
+        studyInfos.add(new WeekStudyInfo("视频学习","2.5h"));
+        studyInfos.add(new WeekStudyInfo("阅读学习","3.5h"));
+        studyInfos.add(new WeekStudyInfo("请教别人","4.0h"));
+        studyInfos.add(new WeekStudyInfo("答题训练","2.5h"));
+
+        //成就数据
+        ArrayList<WeekAchievementInfo> achievementInfos = new ArrayList<>();
+        String date = MyUtil.getTodayDate();
+        achievementInfos.add(new WeekAchievementInfo("#初学者","学习完五篇文章",date));
+        achievementInfos.add(new WeekAchievementInfo("#持之以恒","每天坚持学习半个小时以上",date));
+        achievementInfos.add(new WeekAchievementInfo("#答题天才","答题正确率超过80%",date));
+        achievementInfos.add(new WeekAchievementInfo("#AI革新家","累计与AI交互达到3小时",date));
+        achievementInfos.add(new WeekAchievementInfo("#社交达人","多次评论点赞",date));
+
+
+        return new ReportResponse(reportInfo,scoreInfo,studyInfos,achievementInfos);
+    }
+
     @Override
     public boolean addEvent(PlanRequest planRequest, Integer planId) {
         Integer loginId = MyUtil.getLoginId();
@@ -349,10 +399,10 @@ public class MemberServiceImpl implements MemberService {
 //        System.out.println(lastWeekLocalDateTime);
 
         //limit 7
-        Page<ScoreDetail> page = new Page<>(1,7);
-        wrapper.eq("user_phone",user.getUserPhone()).orderByDesc("create_time");
+        Page<ScoreDetail> page = new Page<>(1, 7);
+        wrapper.eq("user_phone", user.getUserPhone()).orderByDesc("create_time");
         ArrayList<Day7Score> list = new ArrayList<>();
-        for (ScoreDetail sd1 : scoreDetailMapper.selectPage(page,wrapper).getRecords()) {
+        for (ScoreDetail sd1 : scoreDetailMapper.selectPage(page, wrapper).getRecords()) {
             Integer todayGet1 = MyUtil.getTodaySum(sd1);
             String createTime = sd1.getCreateTime();
             Day7Score score = new Day7Score(createTime, todayGet1);

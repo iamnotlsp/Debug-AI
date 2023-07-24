@@ -1,8 +1,10 @@
 package com.lsp.service.resource;
 
+import com.lsp.pojo.home.response.subclass.GridInfo;
 import com.lsp.pojo.resource.entity.Resource;
 import com.lsp.pojo.resource.response.Comment;
-import com.lsp.pojo.resource.response.MyState;
+import com.lsp.pojo.resource.response.CommentResponse;
+import com.lsp.pojo.resource.response.subclass.MyState;
 
 import java.util.List;
 
@@ -19,7 +21,7 @@ public interface ResourceService {
 
     List<String> getPhotoUrl(Integer resourceId);
 
-    List<Comment> getComments(Integer resourceId);
+    CommentResponse getComments(Integer resourceId, Integer start, Integer pageSize);
 
     MyState getMyState(Integer resourceId);
 
@@ -30,4 +32,6 @@ public interface ResourceService {
     boolean cancelCollection(Integer resourceId);
 
     boolean addCollection(Integer resourceId);
+
+    List<GridInfo> getInfoByLabel(String label);
 }

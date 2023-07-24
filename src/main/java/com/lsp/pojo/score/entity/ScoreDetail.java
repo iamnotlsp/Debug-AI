@@ -27,4 +27,8 @@ public class ScoreDetail {
     public ScoreDetail(String userPhone) {
         this.userPhone = userPhone;
     }
+
+    public Integer getSumScore() {
+        return loginScore + articleScore + viewScore + answerScore + pkScore + aiScore;
+    }
 }

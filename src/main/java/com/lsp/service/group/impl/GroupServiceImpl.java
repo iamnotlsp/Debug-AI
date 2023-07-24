@@ -3,13 +3,13 @@ package com.lsp.service.group.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+
 import com.lsp.mapper.*;
 import com.lsp.pojo.member.response.GroupForumResponse;
 import com.lsp.pojo.member.response.subclass.GroupForumInfo;
 import com.lsp.pojo.resource.entity.Resource;
 import com.lsp.pojo.resource.entity.ResourceComment;
 import com.lsp.pojo.score.entity.Score;
-import com.lsp.pojo.score.entity.ScoreDetail;
 import com.lsp.pojo.user.entity.User;
 import com.lsp.pojo.user.entity.UserGroup;
 import com.lsp.service.group.GroupService;
@@ -19,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -81,7 +80,8 @@ public class GroupServiceImpl implements GroupService {
             Resource resource = resourceMapper.selectById(comment.getResourceId());
             list.add(new GroupForumInfo(newUser.getUserName(), newUser.getHeadPhoto(), comment.getResourceId(),
                     resource.getResourceTitle(), resource.getResourcePhoto(), comment.getComment(),
-                    resource.getResourceLikes(), resource.getResourceComments(), comment.getCreateTime()));
+                    comment.getCommentPhoto(), resource.getResourceLikes(), resource.getResourceComments(),
+                    comment.getCreateTime()));
         }
 
         return new GroupForumResponse(list);

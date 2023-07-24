@@ -46,7 +46,8 @@ public class UserServiceImpl implements UserService {
                 StpUtil.login(user.getId());
 
                 //积分明细表新建一个数据
-                QueryWrapper<ScoreDetail> wrapper = new QueryWrapper<ScoreDetail>().eq("user_phone", user.getUserPhone());
+                QueryWrapper<ScoreDetail> wrapper = new QueryWrapper<ScoreDetail>()
+                        .eq("user_phone", user.getUserPhone());
                 wrapper.ge("create_time", NumberUtil.getTodayLocalDateTime());
                 if (scoreDetailMapper.selectOne(wrapper) == null) {
                     scoreDetailMapper.insert(new ScoreDetail(user.getUserPhone()));
@@ -77,6 +78,7 @@ public class UserServiceImpl implements UserService {
         }else {
             userMapper.insert(new User(mobile, password));
             scoreMapper.insert(new Score(mobile));
+
             return true;
         }
     }

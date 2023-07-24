@@ -25,28 +25,29 @@ public class UserController {
 
     @GetMapping("/isLogin")
     public Result isLogin() {
-        return Result.success("是否登录" , StpUtil.isLogin());
+        return Result.success("是否登录", StpUtil.isLogin());
     }
 
     @PostMapping("/register")
-    public Result<String> register(@RequestBody RegisterRequest request){
-        if (userService.register(request)){
-            return Result.success("注册成功");
-        }else {
+    public Result<SaTokenInfo> register(@RequestBody RegisterRequest request) {
+        if (userService.register(request)) {
+            //注册后自动登录
+            return doLogin(request.getMobile(), request.getPassword());
+        } else {
             return Result.error("注册失败");
         }
     }
 
     @GetMapping("/isRegister")
-    public Result<String> isRegister(String phone){
-        if (userService.isRegister(phone)){
+    public Result<String> isRegister(String phone) {
+        if (userService.isRegister(phone)) {
             return Result.success("该手机号可用");
-        }else {
+        } else {
             return Result.error("已存在该手机号");
         }
     }
 
-    @GetMapping ("/logout")
+    @GetMapping("/logout")
     public Result<String> logout() {
         StpUtil.logout();
         return Result.success("退出成功");

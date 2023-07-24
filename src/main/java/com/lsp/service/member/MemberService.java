@@ -46,4 +46,5 @@ public interface MemberService {
 
     boolean deleteNoteById(Integer noteId);
 
+    ReportResponse getReport();
 }

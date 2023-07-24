@@ -1,4 +1,4 @@
-package com.lsp.pojo.resource.response;
+package com.lsp.pojo.resource.response.subclass;
 
 import com.lsp.pojo.resource.entity.Resource;
 import lombok.AllArgsConstructor;

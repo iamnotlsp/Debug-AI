@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * @Author: LinShanPeng
@@ -100,7 +101,7 @@ public class HomeServiceImpl implements HomeService {
         list.add(getGrid4());
         list.add(getFlashInfo());
         list.add(getGridChange());
-        list.add(getFallInfo(1,6));
+        list.add(getFallInfo(1, 6));
         return new HomeAllResponse(list);
     }
 
@@ -134,11 +135,17 @@ public class HomeServiceImpl implements HomeService {
         Page<UserHistory> historyPage = historyMapper.selectPage(page, new QueryWrapper<UserHistory>()
                 .eq("user_phone", user.getUserPhone())
                 .orderByDesc("create_time"));
-        //得到资源
-        UserHistory history = historyPage.getRecords().get(0);
-        Resource resource = resourceMapper.selectById(history.getResourceId());
-        LastBrowseInfo info = new LastBrowseInfo(resource.getResourceTitle(),
-                new SchemeDetail(resource.getResourceId()));
+
+        LastBrowseInfo info = null;
+        if (historyPage != null) {
+            //得到资源
+            for (UserHistory history : historyPage.getRecords()) {
+                Resource resource = resourceMapper.selectById(history.getResourceId());
+                info = new LastBrowseInfo(resource.getResourceTitle(),
+                        new SchemeDetail(resource.getResourceId()));
+            }
+        }
+
         return new AllLastBrowseInfo(BaseHomeType.BROWSE, info);
     }
 
@@ -298,7 +305,7 @@ public class HomeServiceImpl implements HomeService {
     /**
      * 瀑布流
      */
-    public AllFallInfo getFallInfo(Integer start,Integer pageSize) {
+    public AllFallInfo getFallInfo(Integer start, Integer pageSize) {
         Page<Resource> page = new Page<>(start, pageSize);
         Page<Resource> resourcePage = resourceMapper.selectPage(page, new QueryWrapper<Resource>()
                 .eq("resource_label", "最新资讯")
@@ -310,6 +317,8 @@ public class HomeServiceImpl implements HomeService {
 //            System.out.println(resource);
             list.add(new GridInfo(resource, new SchemeDetail(resource.getResourceId())));
         }
-        return new AllFallInfo(BaseHomeType.Fall, list,new MyPage(resourcePage));
+        return new AllFallInfo(BaseHomeType.Fall, list, new MyPage(resourcePage));
     }
+
+
 }

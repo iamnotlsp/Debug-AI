@@ -21,10 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -47,8 +44,14 @@ public class ScoreServiceImpl implements ScoreService {
 
     @Override
     public Integer getSumScore() {
-        Integer id = Integer.valueOf(String.valueOf(StpUtil.getLoginId()));
-        Score score = scoreMapper.selectById(id);
+        Integer id = MyUtil.getLoginId();
+        User user = userMapper.selectById(id);
+        Score score = scoreMapper.selectOne(new QueryWrapper<Score>().eq("user_phone", user.getUserPhone()));
+        //解决如果在数据库直接添加用户，无法生成积分的bug
+        if (score == null) {
+            scoreMapper.insert(new Score(user.getUserPhone(), user.getGroupId()));
+            score = scoreMapper.selectOne(new QueryWrapper<Score>().eq("user_phone", user.getUserPhone()));
+        }
         return score.getScore();
     }
 
@@ -122,7 +125,7 @@ public class ScoreServiceImpl implements ScoreService {
             Score score = scores.get(i - 1);
             QueryWrapper<User> wrapper1 = new QueryWrapper<>();
             User user1 = userMapper.selectOne(wrapper1.eq("user_phone", score.getUserPhone()));
-            list.add(new GroupRank(i, user1.getUserName(), score.getScore()));
+            list.add(new GroupRank(i, user1.getUserName(), user1.getHeadPhoto(), score.getScore()));
         }
         return new ScoreRankResponse(groupId, group.getGroupName(), groupService.getGroupNums(), list);
 
@@ -130,7 +133,7 @@ public class ScoreServiceImpl implements ScoreService {
 
     @Override
     public ScoreRankResponse getSumRank3() {
-        Integer id = Integer.valueOf(String.valueOf(StpUtil.getLoginId()));
+        Integer id = MyUtil.getLoginId();
         User user = userMapper.selectById(id);
         //排序该组的积分
         Integer groupId = user.getGroupId();
@@ -141,17 +144,16 @@ public class ScoreServiceImpl implements ScoreService {
         List<Score> scores = scoreMapper.selectList(wrapper);
         ArrayList<GroupRank> list = new ArrayList<>();
         int size = scores.size();
-        if (size>3){
+        if (size > 3) {
             size = 3;
         }
         for (int i = 1; i <= size; i++) {
             Score score = scores.get(i - 1);
             QueryWrapper<User> wrapper1 = new QueryWrapper<>();
             User user1 = userMapper.selectOne(wrapper1.eq("user_phone", score.getUserPhone()));
-            list.add(new GroupRank(i, user1.getUserName(), score.getScore()));
+            list.add(new GroupRank(i, user1.getUserName(), user1.getHeadPhoto(), score.getScore()));
         }
         return new ScoreRankResponse(groupId, group.getGroupName(), groupService.getGroupNums(), list);
-
     }
 
     @Override
@@ -183,7 +185,10 @@ public class ScoreServiceImpl implements ScoreService {
 
             logs.add(new ScoreLog(todayGet, list, sd.getCreateTime()));
         }
-        return new ScoreDetailResponse(userPhone, scoreMapper.selectById(id).getScore(), togetherDay,
+
+        Score score = scoreMapper.selectOne(new QueryWrapper<Score>()
+                .eq("user_phone", user.getUserPhone()));
+        return new ScoreDetailResponse(userPhone, score.getScore(), togetherDay,
                 new MyPage(scoreDetails.getCurrent(), scoreDetails.getPages(),
                         scoreDetails.getSize(), scoreDetails.getTotal()), logs);
     }

@@ -19,6 +19,7 @@ public class ResourceComment implements Serializable {
   private Integer group_id;
   private Integer resourceId;
   private String comment;
+  private String commentPhoto;
   private Integer commentLikes;
   private String createTime;
 

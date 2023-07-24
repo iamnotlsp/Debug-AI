@@ -17,6 +17,7 @@ public class GroupForumInfo {
     private String resourceTitle;
     private String resourcePhoto;
     private String comment;
+    private String commentPhoto;
     private Integer resourceLikes;
     private Integer resourceComments;
     private String createTime;

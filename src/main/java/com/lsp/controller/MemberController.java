@@ -142,4 +142,9 @@ public class MemberController {
             return Result.error("删除失败");
         }
     }
+
+    @GetMapping("/report/get")
+    public Result<ReportResponse> getReport() {
+        return Result.success("学习周报:", memberService.getReport());
+    }
 }

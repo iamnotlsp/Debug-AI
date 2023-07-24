@@ -18,5 +18,6 @@ public class SaTokenConfigure extends WebMvcConfigurer {
         registry.addInterceptor(new SaTokenInterceptor())
                 .addPathPatterns("/**")
                 .excludePathPatterns("/user/**");
+
     }
 }

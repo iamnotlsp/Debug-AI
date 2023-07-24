@@ -1,8 +1,11 @@
 package com.lsp.service.resource.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.lsp.mapper.*;
+import com.lsp.pojo.MyPage;
+import com.lsp.pojo.home.response.subclass.GridInfo;
+import com.lsp.pojo.home.response.subclass.SchemeDetail;
 import com.lsp.pojo.member.entity.UserCollection;
 import com.lsp.pojo.member.entity.UserHistory;
 import com.lsp.pojo.resource.entity.Resource;
@@ -10,7 +13,8 @@ import com.lsp.pojo.resource.entity.ResourceComment;
 import com.lsp.pojo.resource.entity.ResourceImage;
 import com.lsp.pojo.resource.entity.UserLike;
 import com.lsp.pojo.resource.response.Comment;
-import com.lsp.pojo.resource.response.MyState;
+import com.lsp.pojo.resource.response.CommentResponse;
+import com.lsp.pojo.resource.response.subclass.MyState;
 import com.lsp.pojo.user.entity.User;
 import com.lsp.service.resource.ResourceService;
 import com.lsp.utils.MyUtil;
@@ -21,6 +25,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * @Author: LinShanPeng
@@ -118,10 +123,12 @@ public class ResourceServiceImpl implements ResourceService {
      * 得到评论
      */
     @Override
-    public List<Comment> getComments(Integer resourceId) {
+    public CommentResponse getComments(Integer resourceId, Integer start, Integer pageSize) {
         //得到评论
-        List<ResourceComment> comments = resourceCommentMapper.selectList(new QueryWrapper<ResourceComment>()
+        Page<ResourceComment> page = new Page<>(start, pageSize);
+        Page<ResourceComment> commentPage = resourceCommentMapper.selectPage(page, new QueryWrapper<ResourceComment>()
                 .eq("resource_id", resourceId));
+        List<ResourceComment> comments = commentPage.getRecords();
         ArrayList<Comment> list = new ArrayList<>();
         for (ResourceComment comment : comments) {
             Comment comment1 = new Comment(comment);
@@ -131,8 +138,14 @@ public class ResourceServiceImpl implements ResourceService {
             comment1.setUserName(user.getUserName());
             list.add(comment1);
         }
-        return list;
+
+        //得到page信息
+        MyPage myPage = new MyPage(page);
+
+        return new CommentResponse(myPage, list);
     }
+
+
 
     /**
      * 得到我的状态（点赞收藏情况）
@@ -222,6 +235,10 @@ public class ResourceServiceImpl implements ResourceService {
         return false;
     }
 
+    /**
+     * 添加收藏
+     */
+
     @Override
     public boolean addCollection(Integer resourceId) {
         Integer id = MyUtil.getLoginId();
@@ -235,6 +252,24 @@ public class ResourceServiceImpl implements ResourceService {
             return true;
         }
         return false;
+    }
+
+    /**
+     * 根据label得到资源
+     */
+
+    public List<GridInfo> getInfoByLabel(String label){
+        int start = new Random().nextInt(3) + 1;
+        Page<Resource> page = new Page<>(start, 2);
+        Page<Resource> resourcePage = resourceMapper.selectPage(page, new QueryWrapper<Resource>()
+                .eq("resource_label", label)
+                .orderByDesc("id"));
+
+        ArrayList<GridInfo> list = new ArrayList<>();
+        for (Resource resource : resourcePage.getRecords()) {
+            list.add(new GridInfo(resource, new SchemeDetail(resource.getResourceId())));
+        }
+        return list;
     }
 
 }
