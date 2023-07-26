@@ -25,7 +25,11 @@ public class GridInfo {
         this.title = resource.getResourceTitle();
         this.author = resource.getResourceAuthorName();
         this.authorHead = resource.getResourceAuthorHead();
-        this.content = resource.getResourceContent().substring(0, 30);
+        if (resource.getResourceContent().length() < 30) {
+            this.content = resource.getResourceContent();
+        } else {
+            this.content = resource.getResourceContent().substring(0, 30);
+        }
         this.photo = resource.getResourcePhoto();
         this.readHot = resource.getResourceReads() * 10 + 5;
         this.likes = resource.getResourceLikes();

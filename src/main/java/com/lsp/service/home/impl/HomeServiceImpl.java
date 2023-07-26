@@ -292,14 +292,14 @@ public class HomeServiceImpl implements HomeService {
     /**
      * 可变宫格
      */
-    public AllGrid4Info getGridChange() {
+    public AllGridChangeInfo getGridChange() {
         List<Resource> resources = resourceMapper.selectList(new QueryWrapper<Resource>()
                 .eq("resource_show", "可变宫格"));
         ArrayList<GridInfo> list = new ArrayList<>();
         for (Resource resource : resources) {
             list.add(new GridInfo(resource, new SchemeDetail(resource.getResourceId())));
         }
-        return new AllGrid4Info(BaseHomeType.GRID, list);
+        return new AllGridChangeInfo(BaseHomeType.GRID, list);
     }
 
     /**

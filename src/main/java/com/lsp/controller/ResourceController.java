@@ -3,6 +3,7 @@ package com.lsp.controller;
 import com.lsp.pojo.Result;
 import com.lsp.pojo.home.response.subclass.GridInfo;
 import com.lsp.pojo.resource.entity.Resource;
+import com.lsp.pojo.resource.request.CommentRequest;
 import com.lsp.pojo.resource.response.Comment;
 import com.lsp.pojo.resource.response.CommentResponse;
 import com.lsp.pojo.resource.response.RecommendResponse;
@@ -55,6 +56,13 @@ public class ResourceController {
         return Result.success("评论内容:", comments);
     }
 
+    @PostMapping("/comment/post")
+    public Result<CommentResponse> postComment(Integer resourceId,
+                                               @RequestBody CommentRequest request) {
+        CommentResponse comments = resourceService.postComment(resourceId, request);
+        return Result.success("评论内容:", comments);
+    }
+
     @GetMapping("/recommend/get")
     public Result<RecommendResponse> getRecommend() {
         List<GridInfo> info = resourceService.getInfoByLabel("最新资讯");
@@ -100,7 +108,5 @@ public class ResourceController {
         }
     }
 
-//    @PostMapping("/comment/post")
-//    public Result<>
 
 }

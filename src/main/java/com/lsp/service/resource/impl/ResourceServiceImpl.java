@@ -12,6 +12,7 @@ import com.lsp.pojo.resource.entity.Resource;
 import com.lsp.pojo.resource.entity.ResourceComment;
 import com.lsp.pojo.resource.entity.ResourceImage;
 import com.lsp.pojo.resource.entity.UserLike;
+import com.lsp.pojo.resource.request.CommentRequest;
 import com.lsp.pojo.resource.response.Comment;
 import com.lsp.pojo.resource.response.CommentResponse;
 import com.lsp.pojo.resource.response.subclass.MyState;
@@ -145,7 +146,27 @@ public class ResourceServiceImpl implements ResourceService {
         return new CommentResponse(myPage, list);
     }
 
+    /**
+     * 新增评论
+     */
 
+    @Override
+    public CommentResponse postComment(Integer resourceId, CommentRequest request) {
+        //得到用户信息
+        Integer loginId = MyUtil.getLoginId();
+        User user = userMapper.selectById(loginId);
+
+        //添加评论
+        String comment = request.getComment();
+        String commentPhoto = request.getCommentPhoto();
+        ResourceComment resourceComment = new ResourceComment(comment, commentPhoto);
+        resourceComment.setResourceId(resourceId);
+        resourceComment.setUserPhone(user.getUserPhone());
+        resourceComment.setGroup_id(user.getGroupId());
+        resourceCommentMapper.insert(resourceComment);
+
+        return getComments(resourceId, 1, 3);
+    }
 
     /**
      * 得到我的状态（点赞收藏情况）
@@ -258,7 +279,7 @@ public class ResourceServiceImpl implements ResourceService {
      * 根据label得到资源
      */
 
-    public List<GridInfo> getInfoByLabel(String label){
+    public List<GridInfo> getInfoByLabel(String label) {
         int start = new Random().nextInt(3) + 1;
         Page<Resource> page = new Page<>(start, 2);
         Page<Resource> resourcePage = resourceMapper.selectPage(page, new QueryWrapper<Resource>()
@@ -271,5 +292,6 @@ public class ResourceServiceImpl implements ResourceService {
         }
         return list;
     }
+
 
 }

@@ -23,5 +23,8 @@ public class ResourceComment implements Serializable {
   private Integer commentLikes;
   private String createTime;
 
-
+  public ResourceComment(String comment, String commentPhoto) {
+    this.comment = comment;
+    this.commentPhoto = commentPhoto;
+  }
 }
