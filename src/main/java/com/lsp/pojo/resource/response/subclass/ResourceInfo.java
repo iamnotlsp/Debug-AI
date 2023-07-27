@@ -19,6 +19,7 @@ public class ResourceInfo {
     private String resourceAuthorName;
     private String resourceAuthorHead;
     private String resourceContent;
+    private String videoUrl;
     private Integer resourceReads;
     private Integer resourceSearch;
     private Integer resourceLikes;
@@ -33,6 +34,7 @@ public class ResourceInfo {
         this.resourceAuthorName = resource.getResourceAuthorName();
         this.resourceAuthorHead = resource.getResourceAuthorHead();
         this.resourceContent = resource.getResourceContent();
+        this.videoUrl = resource.getResourceUrl();
         this.resourceReads = resource.getResourceReads();
         this.resourceSearch = resource.getResourceSearch();
         this.resourceLikes = resource.getResourceLikes();

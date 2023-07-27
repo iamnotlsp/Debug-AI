@@ -21,6 +21,7 @@ public class Resource implements Serializable {
   private String resourceLabel;
   private String resourceShow;
   private String resourceTitle;
+  private String resourceAssociation;
   private String resourceAuthorName;
   private String resourceAuthorHead;
   private String resourceContent;
