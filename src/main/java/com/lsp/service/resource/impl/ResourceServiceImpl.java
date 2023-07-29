@@ -137,6 +137,8 @@ public class ResourceServiceImpl implements ResourceService {
             User user = userMapper.selectOne(new QueryWrapper<User>()
                     .eq("user_phone", comment.getUserPhone()));
             comment1.setUserName(user.getUserName());
+            comment1.setHeadPhoto(user.getHeadPhoto());
+            comment1.setGroupId(user.getGroupId());
             list.add(comment1);
         }
 

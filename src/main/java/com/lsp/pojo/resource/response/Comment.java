@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 public class Comment {
     private Integer groupId;
     private String userName;
+    private String headPhoto;
     private String comment;
     private String commentPhoto;
     private Integer commentLikes;

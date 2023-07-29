@@ -58,6 +58,24 @@ public class SearchServiceImpl implements SearchService {
      */
     @Override
     public SearchContentResponse getSearchContent(String keyword) {
+        //得到资讯
+        QueryWrapper<Resource> wrapper1 = new QueryWrapper<Resource>()
+                .like("resource_title", keyword);
+        Page<Resource> page = new Page<>(1, 3);
+        Page<Resource> resourcePage = resourceMapper.selectPage(page, wrapper1);
+        if (resourcePage.getRecords().size() == 0){
+            return new SearchContentResponse();
+        }
+        ArrayList<GridInfo> gridList = new ArrayList<>();
+        for (Resource resource : resourcePage.getRecords()) {
+            if (resource.getResourceType() == 1) {
+                gridList.add(new GridInfo(resource, new SchemeDetail(resource.getResourceId())));
+            } else if (resource.getResourceType() == 3) {
+                gridList.add(new GridInfo(resource, new SchemeVideo(resource.getResourceUrl())));
+            }
+        }
+
+
         //得到百科
         QueryWrapper<SearchContent> wrapper = new QueryWrapper<SearchContent>()
                 .like("search_type", keyword);
@@ -70,19 +88,7 @@ public class SearchServiceImpl implements SearchService {
         }
         WikiInfo wikiInfo = new WikiInfo(wiki);
 
-        //得到资讯
-        QueryWrapper<Resource> wrapper1 = new QueryWrapper<Resource>()
-                .like("resource_title", keyword);
-        Page<Resource> page = new Page<>(1, 3);
-        Page<Resource> resourcePage = resourceMapper.selectPage(page, wrapper1);
-        ArrayList<GridInfo> gridList = new ArrayList<>();
-        for (Resource resource : resourcePage.getRecords()) {
-            if (resource.getResourceType() == 1) {
-                gridList.add(new GridInfo(resource, new SchemeDetail(resource.getResourceId())));
-            } else if (resource.getResourceType() == 3) {
-                gridList.add(new GridInfo(resource, new SchemeVideo(resource.getResourceUrl())));
-            }
-        }
+
 
         //得到问题
         wrapper.clear();

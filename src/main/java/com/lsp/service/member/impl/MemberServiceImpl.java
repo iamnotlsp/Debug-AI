@@ -15,6 +15,7 @@ import com.lsp.pojo.member.request.PlanRequest;
 import com.lsp.pojo.member.response.*;
 import com.lsp.pojo.member.response.subclass.*;
 import com.lsp.pojo.resource.entity.Resource;
+import com.lsp.pojo.resource.response.subclass.ResourceInfo;
 import com.lsp.pojo.score.entity.Score;
 import com.lsp.pojo.score.entity.ScoreDetail;
 import com.lsp.pojo.score.response.ScoreRankResponse;
@@ -115,11 +116,11 @@ public class MemberServiceImpl implements MemberService {
         QueryWrapper<UserCollection> wrapper = new QueryWrapper<UserCollection>()
                 .eq("user_phone", user.getUserPhone());
         List<UserCollection> collections = collectionsMapper.selectList(wrapper);
-        ArrayList<Resource> list = new ArrayList<>();
+        ArrayList<ResourceInfo> list = new ArrayList<>();
         for (UserCollection collection : collections) {
             Integer resourceId = collection.getResourceId();
             Resource resource = resourceMapper.selectById(resourceId);
-            list.add(resource);
+            list.add(new ResourceInfo(resource));
         }
         Integer count = Math.toIntExact(collectionsMapper.selectCount(wrapper));
         return new CollectionResponse(user.getUserPhone(), count, list);
